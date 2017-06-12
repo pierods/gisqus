@@ -42,10 +42,12 @@ var (
 	forumMostLikedJSON         string
 )
 
+// MockServer makes it possible to redirect gisqus calls to local calls
 type MockServer struct {
 	baseDir string
 }
 
+// NewMockServer returns a MockServer reading test data from baseDir
 func NewMockServer(baseDir string) MockServer {
 	return MockServer{
 		baseDir,
@@ -193,7 +195,8 @@ func (ms *MockServer) readFile(fileName string) (string, error) {
 
 }
 
-func (m *MockServer) NewServer() *httptest.Server {
+// NewServer returns a Server initialized with gisqus test data and urls
+func (ms *MockServer) NewServer() *httptest.Server {
 
 	m.initForums()
 	m.initPosts()
@@ -257,6 +260,7 @@ func (m *MockServer) NewServer() *httptest.Server {
 	return httptest.NewServer(http.HandlerFunc(f))
 }
 
+// SwitchHostAndScheme can be used to redirect calls from remote URLs to local
 func SwitchHostAndScheme(source, newValues string) (string, error) {
 	newValuesS, err := url.Parse(newValues)
 	if err != nil {

@@ -154,7 +154,7 @@ func TestUserActiveForums(t *testing.T) {
 	testValues = url.Values{}
 	_, err = testGisqus.UserActiveForums(testCtx, "", testValues)
 	if err == nil {
-		t.Fatal("Should be able to reject an emtpy user id")
+		t.Fatal("Should be able to reject an empty user id")
 	}
 
 	forums, err := testGisqus.UserActiveForums(testCtx, "46351054", testValues)
@@ -268,7 +268,7 @@ func TestUserForumFollowing(t *testing.T) {
 	testValues = url.Values{}
 	_, err = testGisqus.UserForumFollowing(testCtx, "", testValues)
 	if err == nil {
-		t.Fatal("Should be able to reject an emtpy user id")
+		t.Fatal("Should be able to reject an empty user id")
 	}
 
 	forums, err := testGisqus.UserForumFollowing(testCtx, "46351054", testValues)

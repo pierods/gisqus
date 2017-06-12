@@ -158,7 +158,7 @@ const (
 	PostNoIssue
 )
 
-// Post constans are used by Disqus in API calls in the "include" parameter
+// Post constants are used by Disqus in API calls in the "include" parameter
 const (
 	PostUnapproved  = "unapproved"
 	PostApproved    = "approved"
