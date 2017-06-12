@@ -7,24 +7,29 @@ import (
 	"time"
 )
 
-type PostsURLs struct {
-	post_details_url string
-	post_list_url    string
+// PostsURLS are the URLS of the Post endpoints in Disqus' API
+type PostsURLS struct {
+	postDetailsURL string
+	postListURL    string
 }
 
-var postsUrls = PostsURLs{
-	post_details_url: "https://disqus.com/api/3.0/posts/details.json",
-	post_list_url:    "https://disqus.com/api/3.0/posts/list.json",
+var postsUrls = PostsURLS{
+	postDetailsURL: "https://disqus.com/api/3.0/posts/details.json",
+	postListURL:    "https://disqus.com/api/3.0/posts/list.json",
 }
 
-func (gisqus *Gisqus) PostDetails(postId string, values url.Values, ctx context.Context) (*PostDetailsResponse, error) {
+/*
+PostDetails wraps https://disqus.com/api/docs/posts/details/ (https://disqus.com/api/3.0/posts/details.json)
+It does not support the "related" argument.
+*/
+func (gisqus *Gisqus) PostDetails(ctx context.Context, postID string, values url.Values) (*PostDetailsResponse, error) {
 
-	if postId == "" {
+	if postID == "" {
 		return nil, errors.New("Must use post parameter")
 	}
-	values.Set("post", postId)
+	values.Set("post", postID)
 	values.Set("api_secret", gisqus.secret)
-	url := postsUrls.post_details_url + "?" + values.Encode()
+	url := postsUrls.postDetailsURL + "?" + values.Encode()
 
 	var pdr PostDetailsResponse
 
@@ -44,12 +49,12 @@ func (gisqus *Gisqus) PostDetails(postId string, values url.Values, ctx context.
 }
 
 /*
-https://disqus.com/api/docs/posts/list/
+PostList wraps https://disqus.com/api/docs/posts/list/ (https://disqus.com/api/3.0/posts/list.json)
 */
-func (gisqus *Gisqus) PostList(values url.Values, ctx context.Context) (*PostListResponse, error) {
+func (gisqus *Gisqus) PostList(ctx context.Context, values url.Values) (*PostListResponse, error) {
 
 	values.Set("api_secret", gisqus.secret)
-	url := postsUrls.post_list_url + "?" + values.Encode()
+	url := postsUrls.postListURL + "?" + values.Encode()
 
 	var plr PostListResponse
 
@@ -73,22 +78,25 @@ func (gisqus *Gisqus) PostList(values url.Values, ctx context.Context) (*PostLis
 	return &plr, nil
 }
 
+// PostListResponse wraps the response of the post list endpoint
 type PostListResponse struct {
 	ResponseStubWithCursor
 	Response []*Post `json:"response"`
 }
 
+// PostDetailsResponse wraps the response of the post details endpoint
 type PostDetailsResponse struct {
 	ResponseStub
 	Response *Post `json:"response"`
 }
 
+// Post models a Post as returned by Disqus' API
 type Post struct {
 	Dislikes            int          `json:"dislikes"`
 	NumReports          int          `json:"numReports"`
 	Likes               int          `json:"likes"`
 	Message             string       `json:"message"`
-	Id                  string       `json:"id"`
+	ID                  string       `json:"id"`
 	IsDeleted           bool         `json:"isDeleted"`
 	Author              *PostAuthor  `json:"author"`
 	Media               []*PostMedia `json:"media"`
@@ -110,24 +118,26 @@ type Post struct {
 	Sb                  bool         `json:"sb"`
 }
 
+// PostMedia models the fields the media field in a Post
 type PostMedia struct {
 }
 
+// PostAuthor models the fields of the author field in a Post
 type PostAuthor struct {
 	Username                string      `json:"username"`
 	About                   string      `json:"about"`
 	Name                    string      `json:"name"`
 	Disable3rdPartyTrackers bool        `json:"disable3rdPartyTrackers"`
-	Url                     string      `json:"url"`
+	URL                     string      `json:"url"`
 	IsAnonymous             bool        `json:"isAnonymous"`
-	ProfileUrl              string      `json:"profileUrl"`
+	ProfileURL              string      `json:"profileUrl"`
 	IsPowerContributor      bool        `json:"isPowerContributor"`
 	Location                string      `json:"location"`
 	IsPrivate               bool        `json:"isPrivate"`
-	SignedUrl               string      `json:"signedUrl"`
+	SignedURL               string      `json:"signedUrl"`
 	IsPrimary               bool        `json:"isPrimary"`
 	JoinedAt                time.Time   `json:"-"`
 	DisqusTimeJoinedAt      string      `json:"joinedAt"`
-	Id                      string      `json:"id"`
+	ID                      string      `json:"id"`
 	Avatar                  *UserAvatar `json:"avatar"`
 }

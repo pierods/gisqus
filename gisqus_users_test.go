@@ -12,17 +12,17 @@ func TestUserPosts(t *testing.T) {
 	mockServer = ms.NewServer()
 	defer mockServer.Close()
 
-	usersUrls.user_post_list_url, err = mock.SwitchHostAndScheme(usersUrls.user_post_list_url, mockServer.URL)
+	usersUrls.userPostListURL, err = mock.SwitchHostAndScheme(usersUrls.userPostListURL, mockServer.URL)
 	if err != nil {
 		t.Fatal(err)
 	}
 
 	testValues = url.Values{}
-	_, err = testGisqus.UserPosts("", testValues, testCtx)
+	_, err = testGisqus.UserPosts(testCtx, "", testValues)
 	if err == nil {
 		t.Fatal("Should be able to reject a null user")
 	}
-	posts, err := testGisqus.UserPosts("79849", testValues, testCtx)
+	posts, err := testGisqus.UserPosts(testCtx, "79849", testValues)
 	if err != nil {
 		t.Fatal("Should be able to call the forum list users endpoint - ", err)
 	}
@@ -32,7 +32,7 @@ func TestUserPosts(t *testing.T) {
 	if posts.Response[0].Message != "<p>Looks really good so far....keeping my fingers crossed.</p>" {
 		t.Fatal("Should be able to retrieve post message")
 	}
-	if posts.Response[0].Id != "2978710471" {
+	if posts.Response[0].ID != "2978710471" {
 		t.Fatal("Should be able to retrieve post id")
 	}
 	if posts.Response[0].Author.Username != "laross19" {
@@ -57,20 +57,20 @@ func TestUserDetails(t *testing.T) {
 	mockServer = ms.NewServer()
 	defer mockServer.Close()
 
-	usersUrls.user_detail_url, err = mock.SwitchHostAndScheme(usersUrls.user_detail_url, mockServer.URL)
+	usersUrls.userDetailURL, err = mock.SwitchHostAndScheme(usersUrls.userDetailURL, mockServer.URL)
 	if err != nil {
 		t.Fatal(err)
 	}
 	testValues = url.Values{}
-	_, err = testGisqus.UserDetails("", testValues, testCtx)
+	_, err = testGisqus.UserDetails(testCtx, "", testValues)
 	if err == nil {
 		t.Fatal("Should check for an empty user id")
 	}
-	user, err := testGisqus.UserDetails("79849", testValues, testCtx)
+	user, err := testGisqus.UserDetails(testCtx, "79849", testValues)
 	if err != nil {
 		t.Fatal(err)
 	}
-	if user.Response.Id != "79849" {
+	if user.Response.ID != "79849" {
 		t.Fatal("Should be able to retrieve a user id")
 	}
 	if user.Response.Rep != 1.2537909999999999 {
@@ -104,13 +104,13 @@ func TestUserInteresting(t *testing.T) {
 	mockServer = ms.NewServer()
 	defer mockServer.Close()
 
-	usersUrls.user_interesting_users_url, err = mock.SwitchHostAndScheme(usersUrls.user_interesting_users_url, mockServer.URL)
+	usersUrls.userInterestingIUsersURL, err = mock.SwitchHostAndScheme(usersUrls.userInterestingIUsersURL, mockServer.URL)
 	if err != nil {
 		t.Fatal(err)
 	}
 
 	testValues = url.Values{}
-	users, err := testGisqus.UserInteresting(testValues, testCtx)
+	users, err := testGisqus.UserInteresting(testCtx, testValues)
 	if err != nil {
 		t.Fatal("Should be able to call the forum list interesting users endpoint - ", err)
 	}
@@ -126,7 +126,7 @@ func TestUserInteresting(t *testing.T) {
 	if users.Response.Objects["auth.User?id=160076302"].Name != "de ja ful" {
 		t.Fatal("Should be able to retrieve a user name")
 	}
-	if users.Response.Objects["auth.User?id=160076302"].ProfileUrl != "https://disqus.com/by/anticonsoleshit/" {
+	if users.Response.Objects["auth.User?id=160076302"].ProfileURL != "https://disqus.com/by/anticonsoleshit/" {
 		t.Fatal("Should be able to retrieve a profile url")
 	}
 	if users.Response.Objects["auth.User?id=160076302"].Reputation != 6.920859999999999 {
@@ -135,7 +135,7 @@ func TestUserInteresting(t *testing.T) {
 	if ToDisqusTime(users.Response.Objects["auth.User?id=160076302"].JoinedAt) != "2015-06-02T14:43:19" {
 		t.Fatal("Should be able to retrieve a user's joined at")
 	}
-	if users.Response.Objects["auth.User?id=160076302"].Id != "160076302" {
+	if users.Response.Objects["auth.User?id=160076302"].ID != "160076302" {
 		t.Fatal("Should be able to retrieve a user's id")
 	}
 
@@ -146,18 +146,18 @@ func TestUserActiveForums(t *testing.T) {
 	mockServer = ms.NewServer()
 	defer mockServer.Close()
 
-	usersUrls.user_active_forums, err = mock.SwitchHostAndScheme(usersUrls.user_active_forums, mockServer.URL)
+	usersUrls.userActiveForums, err = mock.SwitchHostAndScheme(usersUrls.userActiveForums, mockServer.URL)
 	if err != nil {
 		t.Fatal(err)
 	}
 
 	testValues = url.Values{}
-	_, err = testGisqus.UserActiveForums("", testValues, testCtx)
+	_, err = testGisqus.UserActiveForums(testCtx, "", testValues)
 	if err == nil {
 		t.Fatal("Should be able to reject an emtpy user id")
 	}
 
-	forums, err := testGisqus.UserActiveForums("46351054", testValues, testCtx)
+	forums, err := testGisqus.UserActiveForums(testCtx, "46351054", testValues)
 	if err != nil {
 		t.Fatal(err)
 	}
@@ -170,13 +170,13 @@ func TestUserActiveForums(t *testing.T) {
 	if forums.Response[0].Founder != "847" {
 		t.Fatal("Should be able to correctly retrieve a forum founder")
 	}
-	if forums.Response[0].Id != "tvnewser" {
+	if forums.Response[0].ID != "tvnewser" {
 		t.Fatal("Should be able to correctly retrieve a forum id")
 	}
 	if forums.Response[0].Name != "TVNewser" {
 		t.Fatal("Should be able to correctly retrieve a forum name")
 	}
-	if forums.Response[0].OrganizationId != 618 {
+	if forums.Response[0].OrganizationID != 618 {
 		t.Fatal("Should be able to correctly retrieve a forum org id")
 	}
 }
@@ -186,24 +186,24 @@ func TestUserFollowers(t *testing.T) {
 	mockServer = ms.NewServer()
 	defer mockServer.Close()
 
-	usersUrls.user_followers, err = mock.SwitchHostAndScheme(usersUrls.user_followers, mockServer.URL)
+	usersUrls.userFollowers, err = mock.SwitchHostAndScheme(usersUrls.userFollowers, mockServer.URL)
 	if err != nil {
 		t.Fatal(err)
 	}
 
 	testValues = url.Values{}
-	_, err = testGisqus.UserFollowers("", testValues, testCtx)
+	_, err = testGisqus.UserFollowers(testCtx, "", testValues)
 	if err == nil {
 		t.Fatal("Should check for an empty user id")
 	}
-	users, err := testGisqus.UserFollowers("46351054", testValues, testCtx)
+	users, err := testGisqus.UserFollowers(testCtx, "46351054", testValues)
 	if err != nil {
 		t.Fatal(err)
 	}
 	if len(users.Response) != 25 {
 		t.Fatal("Should be able to parse result set entirely")
 	}
-	if users.Response[0].Id != "32414357" {
+	if users.Response[0].ID != "32414357" {
 		t.Fatal("Should be able to retrieve a user id")
 	}
 	if users.Response[0].Rep != 0.4153629999999999 {
@@ -223,24 +223,24 @@ func TestUserFollowing(t *testing.T) {
 	mockServer = ms.NewServer()
 	defer mockServer.Close()
 
-	usersUrls.user_following, err = mock.SwitchHostAndScheme(usersUrls.user_following, mockServer.URL)
+	usersUrls.userFollowing, err = mock.SwitchHostAndScheme(usersUrls.userFollowing, mockServer.URL)
 	if err != nil {
 		t.Fatal(err)
 	}
 
 	testValues = url.Values{}
-	_, err = testGisqus.UserFollowing("", testValues, testCtx)
+	_, err = testGisqus.UserFollowing(testCtx, "", testValues)
 	if err == nil {
 		t.Fatal("Should check for an empty user id")
 	}
-	users, err := testGisqus.UserFollowing("195792235", testValues, testCtx)
+	users, err := testGisqus.UserFollowing(testCtx, "195792235", testValues)
 	if err != nil {
 		t.Fatal(err)
 	}
 	if len(users.Response) != 25 {
 		t.Fatal("Should be able to parse result set entirely")
 	}
-	if users.Response[0].Id != "32078576" {
+	if users.Response[0].ID != "32078576" {
 		t.Fatal("Should be able to retrieve a user id")
 	}
 	if users.Response[0].Rep != 1.3459269999999999 {
@@ -260,18 +260,18 @@ func TestUserForumFollowing(t *testing.T) {
 	mockServer = ms.NewServer()
 	defer mockServer.Close()
 
-	usersUrls.user_following_forums, err = mock.SwitchHostAndScheme(usersUrls.user_following_forums, mockServer.URL)
+	usersUrls.userFollowingForums, err = mock.SwitchHostAndScheme(usersUrls.userFollowingForums, mockServer.URL)
 	if err != nil {
 		t.Fatal(err)
 	}
 
 	testValues = url.Values{}
-	_, err = testGisqus.UserForumFollowing("", testValues, testCtx)
+	_, err = testGisqus.UserForumFollowing(testCtx, "", testValues)
 	if err == nil {
 		t.Fatal("Should be able to reject an emtpy user id")
 	}
 
-	forums, err := testGisqus.UserForumFollowing("46351054", testValues, testCtx)
+	forums, err := testGisqus.UserForumFollowing(testCtx, "46351054", testValues)
 	if err != nil {
 		t.Fatal(err)
 	}
@@ -284,13 +284,13 @@ func TestUserForumFollowing(t *testing.T) {
 	if forums.Response[0].Founder != "172746617" {
 		t.Fatal("Should be able to correctly retrieve a forum founder")
 	}
-	if forums.Response[0].Id != "channel-animeforthepeople" {
+	if forums.Response[0].ID != "channel-animeforthepeople" {
 		t.Fatal("Should be able to correctly retrieve a forum id")
 	}
 	if forums.Response[0].Name != "Anime For The People" {
 		t.Fatal("Should be able to correctly retrieve a forum name")
 	}
-	if forums.Response[0].OrganizationId != 3644738 {
+	if forums.Response[0].OrganizationID != 3644738 {
 		t.Fatal("Should be able to correctly retrieve a forum org id")
 	}
 }

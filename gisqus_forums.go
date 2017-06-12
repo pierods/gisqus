@@ -7,32 +7,36 @@ import (
 	"time"
 )
 
-type ForumsURLs struct {
-	forum_interesting_forums_url string
-	forum_details_url            string
-	forum_categories_url         string
-	forum_list_users             string
-	forum_list_threads           string
-	forum_most_liked_users       string
+// ForumsURLS contains the URLs of the API calls for forums on Disqus
+type ForumsURLS struct {
+	forumInterestingForumsURL string
+	forumDetailsURL           string
+	forumCategoriesURL        string
+	forumListUsers            string
+	forumListThreads          string
+	forumMostLikedUsers       string
 }
 
-var forumsUrls = ForumsURLs{
-	forum_interesting_forums_url: "https://disqus.com/api/3.0/forums/interestingForums",
-	forum_details_url:            "https://disqus.com/api/3.0/forums/details.json",
-	forum_categories_url:         "https://disqus.com/api/3.0/forums/listCategories.json",
-	forum_list_users:             "https://disqus.com/api/3.0/forums/listUsers.json",
-	forum_list_threads:           "https://disqus.com/api/3.0/forums/listThreads.json",
-	forum_most_liked_users:       "https://disqus.com/api/3.0/forums/listMostLikedUsers.json",
+var forumsUrls = ForumsURLS{
+	forumInterestingForumsURL: "https://disqus.com/api/3.0/forums/interestingForums",
+	forumDetailsURL:           "https://disqus.com/api/3.0/forums/details.json",
+	forumCategoriesURL:        "https://disqus.com/api/3.0/forums/listCategories.json",
+	forumListUsers:            "https://disqus.com/api/3.0/forums/listUsers.json",
+	forumListThreads:          "https://disqus.com/api/3.0/forums/listThreads.json",
+	forumMostLikedUsers:       "https://disqus.com/api/3.0/forums/listMostLikedUsers.json",
 }
 
-func (gisqus *Gisqus) ForumUsers(forum string, values url.Values, ctx context.Context) (*ForumUserListResponse, error) {
+/*
+ForumUsers wraps https://disqus.com/api/3.0/forums/listUsers.json (https://disqus.com/api/docs/forums/listUsers/)
+*/
+func (gisqus *Gisqus) ForumUsers(ctx context.Context, forum string, values url.Values) (*ForumUserListResponse, error) {
 
 	if forum == "" {
 		return nil, errors.New("Must provide a forum id")
 	}
 	values.Set("api_secret", gisqus.secret)
 	values.Set("forum", forum)
-	url := forumsUrls.forum_list_users + "?" + values.Encode()
+	url := forumsUrls.forumListUsers + "?" + values.Encode()
 
 	var fulr ForumUserListResponse
 	err := gisqus.callAndInflate(url, &fulr, ctx)
@@ -49,10 +53,13 @@ func (gisqus *Gisqus) ForumUsers(forum string, values url.Values, ctx context.Co
 	return &fulr, nil
 }
 
-func (gisqus *Gisqus) ForumInteresting(values url.Values, ctx context.Context) (*InterestingForumsResponse, error) {
+/*
+ForumInteresting wraps https://disqus.com/api/docs/forums/interestingForums/ (https://disqus.com/api/3.0/forums/interestingForums.json)
+*/
+func (gisqus *Gisqus) ForumInteresting(ctx context.Context, values url.Values) (*InterestingForumsResponse, error) {
 
 	values.Set("api_secret", gisqus.secret)
-	url := forumsUrls.forum_interesting_forums_url + "?" + values.Encode()
+	url := forumsUrls.forumInterestingForumsURL + "?" + values.Encode()
 
 	var ifr InterestingForumsResponse
 	err := gisqus.callAndInflate(url, &ifr, ctx)
@@ -69,14 +76,18 @@ func (gisqus *Gisqus) ForumInteresting(values url.Values, ctx context.Context) (
 	return &ifr, nil
 }
 
-func (gisqus *Gisqus) ForumDetails(forum string, values url.Values, ctx context.Context) (*ForumDetailsResponse, error) {
+/*
+ForumDetails wraps https://disqus.com/api/docs/forums/details/ (https://disqus.com/api/3.0/forums/details.json)
+It does not support the "related" url parameter (other funcs can be used for drilldown)
+*/
+func (gisqus *Gisqus) ForumDetails(ctx context.Context, forum string, values url.Values) (*ForumDetailsResponse, error) {
 
 	if forum == "" {
 		return nil, errors.New("Must provide a forum id")
 	}
 	values.Set("api_secret", gisqus.secret)
 	values.Set("forum", forum)
-	url := forumsUrls.forum_details_url + "?" + values.Encode()
+	url := forumsUrls.forumDetailsURL + "?" + values.Encode()
 
 	var fdr ForumDetailsResponse
 
@@ -92,14 +103,17 @@ func (gisqus *Gisqus) ForumDetails(forum string, values url.Values, ctx context.
 	return &fdr, err
 }
 
-func (gisqus *Gisqus) ForumCategories(forum string, values url.Values, ctx context.Context) (*CategoriesListResponse, error) {
+/*
+ForumCategories wraps https://disqus.com/api/docs/forums/listCategories/ (https://disqus.com/api/3.0/forums/listCategories.json)
+*/
+func (gisqus *Gisqus) ForumCategories(ctx context.Context, forum string, values url.Values) (*CategoriesListResponse, error) {
 
 	if forum == "" {
 		return nil, errors.New("Must provide a forum id")
 	}
 	values.Set("forum", forum)
 	values.Set("api_secret", gisqus.secret)
-	url := forumsUrls.forum_categories_url + "?" + values.Encode()
+	url := forumsUrls.forumCategoriesURL + "?" + values.Encode()
 
 	var clr CategoriesListResponse
 
@@ -110,14 +124,17 @@ func (gisqus *Gisqus) ForumCategories(forum string, values url.Values, ctx conte
 	return &clr, nil
 }
 
-func (gisqus *Gisqus) ForumThreads(forum string, values url.Values, ctx context.Context) (*ThreadListResponse, error) {
+/*
+ForumThreads wraps https://disqus.com/api/docs/forums/listThreads/ (https://disqus.com/api/3.0/forums/listThreads.json)
+*/
+func (gisqus *Gisqus) ForumThreads(ctx context.Context, forum string, values url.Values) (*ThreadListResponse, error) {
 
 	if forum == "" {
 		return nil, errors.New("Must provide a forum id")
 	}
 	values.Set("forum", forum)
 	values.Set("api_secret", gisqus.secret)
-	url := forumsUrls.forum_list_threads + "?" + values.Encode()
+	url := forumsUrls.forumListThreads + "?" + values.Encode()
 
 	var tlr ThreadListResponse
 
@@ -136,17 +153,17 @@ func (gisqus *Gisqus) ForumThreads(forum string, values url.Values, ctx context.
 }
 
 /*
-https://disqus.com/api/docs/forums/listMostLikedUsers/
-Will not return the # of likes
+ForumMostLikedUsers wraps https://disqus.com/api/docs/forums/listMostLikedUsers/ (https://disqus.com/api/3.0/forums/listMostLikedUsers.json)
+Disque does not return the # of likes with this call.
 */
-func (gisqus *Gisqus) ForumMostLikedUsers(forum string, values url.Values, ctx context.Context) (*MostLikedUsersResponse, error) {
+func (gisqus *Gisqus) ForumMostLikedUsers(ctx context.Context, forum string, values url.Values) (*MostLikedUsersResponse, error) {
 
 	if forum == "" {
 		return nil, errors.New("Must provide a forum id")
 	}
 	values.Set("api_secret", gisqus.secret)
 	values.Set("forum", forum)
-	url := forumsUrls.forum_most_liked_users + "?" + values.Encode()
+	url := forumsUrls.forumMostLikedUsers + "?" + values.Encode()
 
 	var mlur MostLikedUsersResponse
 	err := gisqus.callAndInflate(url, &mlur, ctx)
@@ -163,51 +180,59 @@ func (gisqus *Gisqus) ForumMostLikedUsers(forum string, values url.Values, ctx c
 	return &mlur, nil
 }
 
+// MostLikedUsersResponse models the response of the most liked users in forum endpoint
 type MostLikedUsersResponse struct {
 	ResponseStubWithCursor
 	Response []*User `json:"response"`
 }
 
+// ForumUserListResponse models the response of the user list in forum endpoint
 type ForumUserListResponse struct {
 	ResponseStubWithCursor
 	Response []*User `json:"response"`
 }
 
+// CategoriesListResponse models the category list in forum endpoint
 type CategoriesListResponse struct {
 	ResponseStubWithCursor
 	Response []*Category `json:"response"`
 }
 
+// Category models the category field in forums
 type Category struct {
 	IsDefault bool   `json:"isDefault"`
 	Title     string `json:"title"`
 	Order     int    `json:"order"`
 	Forum     string `json:"forum"`
-	Id        string `json:"id"`
+	ID        string `json:"id"`
 }
 
+// InterestingForumsResponse models the response to a call to Disqus' Interesting Forums (https://disqus.com/api/docs/forums/interestingForums/)
 type InterestingForumsResponse struct {
 	ResponseStubWithCursor
 	Response *InterestingForums `json:"response"`
 }
 
+// InterestingForums models the actual data contained in a call to Disqus' Interesting Forums (https://disqus.com/api/docs/forums/interestingForums/)
 type InterestingForums struct {
 	Items   []*InterestingItem `json:"items"`
 	Objects map[string]*Forum  `json:"objects"`
 }
 
+// ForumDetailsResponse modeles the response to a call to Disqus' Forum details endpoint (https://disqus.com/api/docs/forums/details/)
 type ForumDetailsResponse struct {
 	ResponseStub
 	Response *Forum `json:"response"`
 }
 
+// Forum models the fields of a forum, as returned by Disqus' API
 type Forum struct {
 	RawGuidelines         string             `json:"raw_guidelines"`
 	TwitterName           string             `json:"twitterName"`
 	Guidelines            string             `json:"guidelines"`
 	Favicon               *Icon              `json:"favicon"`
 	DisableDisqusBranding bool               `json:"disableDisqusBranding"`
-	Id                    string             `json:"id"`
+	ID                    string             `json:"id"`
 	CreatedAt             time.Time          `json:"-"`
 	DisqusTimeCreatedAt   string             `json:"createdAt"`
 	Category              string             `json:"category"`
@@ -223,12 +248,13 @@ type Forum struct {
 	Name                  string             `json:"name"`
 	Language              string             `json:"language"`
 	Settings              *ForumSettings     `json:"settings"`
-	OrganizationId        int                `json:"organizationId"`
+	OrganizationID        int                `json:"organizationId"`
 	DaysThreadAlive       int                `json:"daysThreadAlive"`
 	Avatar                *ForumAvatar       `json:"avatar"`
-	SignedUrl             string             `json:"signedUrl"`
+	SignedURL             string             `json:"signedUrl"`
 }
 
+// ForumSettings models the fields of the forum settings field in a Forum
 type ForumSettings struct {
 	SupportLevel                     int  `json:"supportLevel"`
 	AdsDRNativeEnabled               bool `json:"adsDRNativeEnabled"`
@@ -262,14 +288,17 @@ type ForumSettings struct {
 	AdsPositionInthreadEnabled       bool `json:"AdsPositionInthreadEnabled"`
 }
 
+// DisqusPermissions models the fields of the forum permissions field in a Forum
 type DisqusPermissions struct {
 }
 
+// ForumAvatar models the fields of the forum avatar field in a forum
 type ForumAvatar struct {
 	Small *Icon `json:"small"`
 	Large *Icon `json:"large"`
 }
 
+// ForumChannel models the fields of the forum channel field in a forum
 type ForumChannel struct {
 	BannerColor     string          `json:"bannerColor"`
 	Slug            string          `json:"slug"`
@@ -278,7 +307,7 @@ type ForumChannel struct {
 	Name            string          `json:"name"`
 	Banner          string          `json:"banner"`
 	BannerColorHex  string          `json:"bannerColorHex"`
-	Id              string          `json:"id"`
+	ID              string          `json:"id"`
 	Hidden          bool            `json:"hidden"`
 	IsAggregation   bool            `json:"isAggregation"`
 	Avatar          string          `json:"avatar"`
@@ -286,11 +315,12 @@ type ForumChannel struct {
 	IsCategory      bool            `json:"isCategory"`
 	AdminOnly       bool            `json:"adminOnly"`
 	Options         *ChannelOptions `json:"options"`
-	OwnerId         string          `json:"ownerId"`
+	OwnerID         string          `json:"ownerId"`
 }
 
+// ChannelOptions models the fields of the options field in a channel
 type ChannelOptions struct {
-	AboutUrlPath      string             `json:"aboutUrlPath"`
+	AboutURLPath      string             `json:"aboutUrlPath"`
 	Description       string             `json:"description"`
 	Coverimage        *ChannelCoverImage `json:"coverImage"`
 	BannerTimestamp   time.Time          `json:"bannerTimestamp"`
@@ -303,10 +333,12 @@ type ChannelOptions struct {
 	BannerColor       string             `json:"bannerColor"`
 }
 
+// ChannelCoverImage models the fields of the coverImage field in a channel option
 type ChannelCoverImage struct {
 	Cache string
 }
 
+// ChannelTitleLogo models the fields of the titleLogo field in a channel option
 type ChannelTitleLogo struct {
 	Small string
 	Cache string

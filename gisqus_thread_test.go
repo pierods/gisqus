@@ -12,13 +12,13 @@ func TestThreadList(t *testing.T) {
 	mockServer = ms.NewServer()
 	defer mockServer.Close()
 
-	threadsUrls.Thread_list, err = mock.SwitchHostAndScheme(threadsUrls.Thread_list, mockServer.URL)
+	threadsUrls.ThreadList, err = mock.SwitchHostAndScheme(threadsUrls.ThreadList, mockServer.URL)
 	if err != nil {
 		t.Fatal(err)
 	}
 
 	testValues = url.Values{}
-	threads, err := testGisqus.ThreadList(testValues, testCtx)
+	threads, err := testGisqus.ThreadList(testCtx, testValues)
 	if err != nil {
 		t.Fatal("Should be able to call the thread list endpoint - ", err)
 	}
@@ -28,7 +28,7 @@ func TestThreadList(t *testing.T) {
 	if threads.Response[0].Feed != "https://babbel-magazine.disqus.com/personalidades_multilingues_ao_longo_da_historia_babbelcom_087/latest.rss" {
 		t.Fatal("Should be able to retrieve a thread's feed url")
 	}
-	if threads.Response[0].Id != "5850192558" {
+	if threads.Response[0].ID != "5850192558" {
 		t.Fatal("Should be able to retrieve a thread's id")
 	}
 	if threads.Response[0].Category != "3261556" {
@@ -53,21 +53,21 @@ func TestThreadDetails(t *testing.T) {
 	mockServer = ms.NewServer()
 	defer mockServer.Close()
 
-	threadsUrls.Thread_detail_url, err = mock.SwitchHostAndScheme(threadsUrls.Thread_detail_url, mockServer.URL)
+	threadsUrls.ThreadDetailURL, err = mock.SwitchHostAndScheme(threadsUrls.ThreadDetailURL, mockServer.URL)
 	if err != nil {
 		t.Fatal(err)
 	}
 	testValues = url.Values{}
 
-	_, err = testGisqus.ThreadDetails("", testValues, testCtx)
+	_, err = testGisqus.ThreadDetails(testCtx, "", testValues)
 	if err == nil {
 		t.Fatal("Should check for an empty thread id")
 	}
-	details, err := testGisqus.ThreadDetails("5846923796", testValues, testCtx)
+	details, err := testGisqus.ThreadDetails(testCtx, "5846923796", testValues)
 	if err != nil {
 		t.Fatal(err)
 	}
-	if details.Response.Id != "5846923796" {
+	if details.Response.ID != "5846923796" {
 		t.Fatal("Should be able to retrieve a thread id")
 	}
 	if details.Response.Category != "783882" {
@@ -92,30 +92,30 @@ func TestThreadPosts(t *testing.T) {
 	mockServer = ms.NewServer()
 	defer mockServer.Close()
 
-	threadsUrls.Thread_posts, err = mock.SwitchHostAndScheme(threadsUrls.Thread_posts, mockServer.URL)
+	threadsUrls.ThreadPosts, err = mock.SwitchHostAndScheme(threadsUrls.ThreadPosts, mockServer.URL)
 	if err != nil {
 		t.Fatal(err)
 	}
 
 	testValues = url.Values{}
-	_, err = testGisqus.ThreadPosts("", testValues, testCtx)
+	_, err = testGisqus.ThreadPosts(testCtx, "", testValues)
 	if err == nil {
 		t.Fatal("Should check for empty thread id")
 	}
-	posts, err := testGisqus.ThreadPosts("5846923796", testValues, testCtx)
+	posts, err := testGisqus.ThreadPosts(testCtx, "5846923796", testValues)
 	if err != nil {
 		t.Fatal(err)
 	}
 	if len(posts.Response) != 25 {
 		t.Fatal("Should be able to correctly parse a post list")
 	}
-	if posts.Response[0].Id != "3325943139" {
+	if posts.Response[0].ID != "3325943139" {
 		t.Fatal("Should be able to retrieve a post id")
 	}
 	if posts.Response[0].Author.Username != "loovtrain" {
 		t.Fatal("Should be able to retrieve a post's author's username")
 	}
-	if posts.Response[0].Author.Id != "163477624" {
+	if posts.Response[0].Author.ID != "163477624" {
 		t.Fatal("Should be able to retrieve a post's user's id")
 	}
 	if ToDisqusTime(posts.Response[0].CreatedAt) != "2017-05-26T15:12:18" {
@@ -138,13 +138,13 @@ func TestThreadListHot(t *testing.T) {
 	mockServer = ms.NewServer()
 	defer mockServer.Close()
 
-	threadsUrls.Thread_hot, err = mock.SwitchHostAndScheme(threadsUrls.Thread_hot, mockServer.URL)
+	threadsUrls.ThreadHot, err = mock.SwitchHostAndScheme(threadsUrls.ThreadHot, mockServer.URL)
 	if err != nil {
 		t.Fatal(err)
 	}
 
 	testValues = url.Values{}
-	threads, err := testGisqus.ThreadHot(testValues, testCtx)
+	threads, err := testGisqus.ThreadHot(testCtx, testValues)
 	if err != nil {
 		t.Fatal("Should be able to call the thread list endpoint - ", err)
 	}
@@ -154,7 +154,7 @@ func TestThreadListHot(t *testing.T) {
 	if threads.Response[0].Feed != "https://mapleleafshotstove.disqus.com/leafs_links_bob_mckenzie_discusses_kyle_dubas_report_shoots_down_fictitious_william_nylander_trade_r/latest.rss" {
 		t.Fatal("Should be able to retrieve a thread's feed url")
 	}
-	if threads.Response[0].Id != "5846923796" {
+	if threads.Response[0].ID != "5846923796" {
 		t.Fatal("Should be able to retrieve a thread's id")
 	}
 	if threads.Response[0].Category != "783882" {
@@ -179,13 +179,13 @@ func TestThreadListPopular(t *testing.T) {
 	mockServer = ms.NewServer()
 	defer mockServer.Close()
 
-	threadsUrls.Thread_popular, err = mock.SwitchHostAndScheme(threadsUrls.Thread_popular, mockServer.URL)
+	threadsUrls.ThreadPopular, err = mock.SwitchHostAndScheme(threadsUrls.ThreadPopular, mockServer.URL)
 	if err != nil {
 		t.Fatal(err)
 	}
 
 	values := url.Values{}
-	threads, err := testGisqus.ThreadPopular(values, testCtx)
+	threads, err := testGisqus.ThreadPopular(testCtx, values)
 	if err != nil {
 		t.Fatal("Should be able to call the thread list popular endpoint - ", err)
 	}
@@ -195,7 +195,7 @@ func TestThreadListPopular(t *testing.T) {
 	if threads.Response[0].Feed != "https://alloutdoor.disqus.com/sig_sauer_sued_by_new_jersey_state_police/latest.rss" {
 		t.Fatal("Should be able to retrieve a thread's feed url")
 	}
-	if threads.Response[0].Id != "5829486853" {
+	if threads.Response[0].ID != "5829486853" {
 		t.Fatal("Should be able to retrieve a thread's id")
 	}
 	if threads.Response[0].Category != "2409406" {
@@ -220,13 +220,13 @@ func TestThreadListTrending(t *testing.T) {
 	mockServer = ms.NewServer()
 	defer mockServer.Close()
 
-	threadsUrls.Thread_trending, err = mock.SwitchHostAndScheme(threadsUrls.Thread_trending, mockServer.URL)
+	threadsUrls.ThreadTrending, err = mock.SwitchHostAndScheme(threadsUrls.ThreadTrending, mockServer.URL)
 	if err != nil {
 		t.Fatal(err)
 	}
 
 	testValues = url.Values{}
-	trends, err := testGisqus.ThreadTrending(testValues, testCtx)
+	trends, err := testGisqus.ThreadTrending(testCtx, testValues)
 	if err != nil {
 		t.Fatal("Should be able to call the thread trending endpoint - ", err)
 	}
@@ -248,7 +248,7 @@ func TestThreadListTrending(t *testing.T) {
 	if trends.Response[2].TrendingThread.Feed != "https://kissanime.disqus.com/berserk_2017_anime_watch_berserk_2017_anime_online_in_high_quality/latest.rss" {
 		t.Fatal("Should be able to retrieve a thread's feed url")
 	}
-	if trends.Response[2].TrendingThread.Id != "5592902940" {
+	if trends.Response[2].TrendingThread.ID != "5592902940" {
 		t.Fatal("Should be able to retrieve a thread's id")
 	}
 	if trends.Response[2].TrendingThread.Category != "3204063" {
@@ -266,7 +266,7 @@ func TestThreadListTrending(t *testing.T) {
 	if trends.Response[2].TrendingThread.Title != "Berserk (2017) anime | Watch Berserk (2017) anime online in high quality" {
 		t.Fatal("Should be able to retrieve a thread's title")
 	}
-	if trends.Response[2].TrendingThread.HighlightedPost.Id != "3316658778" {
+	if trends.Response[2].TrendingThread.HighlightedPost.ID != "3316658778" {
 		t.Fatal("Should be able to retrieve a trend's highlighted post id")
 	}
 	if ToDisqusTime(trends.Response[2].TrendingThread.HighlightedPost.CreatedAt) != "2017-05-20T23:15:11" {
@@ -278,7 +278,7 @@ func TestThreadListTrending(t *testing.T) {
 	if ToDisqusTime(trends.Response[2].TrendingThread.HighlightedPost.Author.JoinedAt) != "2015-02-06T14:28:51" {
 		t.Fatal("Should be able to retrieve a trend's highlighted post's joined at")
 	}
-	if trends.Response[2].TrendingThread.HighlightedPost.Author.Id != "143213885" {
+	if trends.Response[2].TrendingThread.HighlightedPost.Author.ID != "143213885" {
 		t.Fatal("Should be able to retrieve a trend's highlighted post's author")
 	}
 }

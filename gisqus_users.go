@@ -7,39 +7,41 @@ import (
 	"time"
 )
 
-type UsersURLs struct {
-	user_detail_url            string
-	user_interesting_users_url string
-	user_post_list_url         string
-	user_active_forums         string
-	user_followers             string
-	user_following             string
-	user_following_forums      string
+// UsersURLS are the URLs used by Disqus' user endpoints
+type UsersURLS struct {
+	userDetailURL            string
+	userInterestingIUsersURL string
+	userPostListURL          string
+	userActiveForums         string
+	userFollowers            string
+	userFollowing            string
+	userFollowingForums      string
 }
 
 // following forums
 // curl "https://disqus.com/api/3.0/users/listFollowingForums.json?user=195792235&api_secret=KpVAypnhCxG27eRLRbXad0i1xfbyUsHPE7E8on5wbFJkbQcIzjB0pkJ4kMOfTRmx" |jq
 
-var usersUrls = UsersURLs{
-	user_detail_url:            "https://disqus.com/api/3.0/users/details.json",
-	user_interesting_users_url: "https://disqus.com/api/3.0/users/interestingUsers.json",
-	user_post_list_url:         "https://disqus.com/api/3.0/users/listPosts.json",
-	user_active_forums:         "https://disqus.com/api/3.0/users/listActiveForums.json",
-	user_followers:             "https://disqus.com/api/3.0/users/listFollowers.json",
-	user_following:             "https://disqus.com/api/3.0/users/listFollowing.json",
-	user_following_forums:      "https://disqus.com/api/3.0/users/listFollowingForums.json",
+var usersUrls = UsersURLS{
+	userDetailURL:            "https://disqus.com/api/3.0/users/details.json",
+	userInterestingIUsersURL: "https://disqus.com/api/3.0/users/interestingUsers.json",
+	userPostListURL:          "https://disqus.com/api/3.0/users/listPosts.json",
+	userActiveForums:         "https://disqus.com/api/3.0/users/listActiveForums.json",
+	userFollowers:            "https://disqus.com/api/3.0/users/listFollowers.json",
+	userFollowing:            "https://disqus.com/api/3.0/users/listFollowing.json",
+	userFollowingForums:      "https://disqus.com/api/3.0/users/listFollowingForums.json",
 }
 
 /*
-https://disqus.com/api/docs/users/listPosts/
+UserPosts wraps https://disqus.com/api/docs/users/listPosts/ (https://disqus.com/api/3.0/users/listPosts.json)
+It does not support the "related" argument (related fields can be gotten with calls to their respective APIS)
 */
-func (gisqus *Gisqus) UserPosts(userId string, values url.Values, ctx context.Context) (*PostListResponse, error) {
-	if userId == "" {
+func (gisqus *Gisqus) UserPosts(ctx context.Context, userID string, values url.Values) (*PostListResponse, error) {
+	if userID == "" {
 		return nil, errors.New("Must provide a user id")
 	}
 	values.Set("api_secret", gisqus.secret)
-	values.Set("user", userId)
-	url := usersUrls.user_post_list_url + "?" + values.Encode()
+	values.Set("user", userID)
+	url := usersUrls.userPostListURL + "?" + values.Encode()
 
 	var plr PostListResponse
 
@@ -63,13 +65,16 @@ func (gisqus *Gisqus) UserPosts(userId string, values url.Values, ctx context.Co
 	return &plr, nil
 }
 
-func (gisqus *Gisqus) UserDetails(userId string, values url.Values, ctx context.Context) (*UserDetailsResponse, error) {
+/*
+UserDetails wraps https://disqus.com/api/docs/users/details/ (https://disqus.com/api/3.0/users/details.json)
+*/
+func (gisqus *Gisqus) UserDetails(ctx context.Context, userID string, values url.Values) (*UserDetailsResponse, error) {
 
-	if userId == "" {
+	if userID == "" {
 		return nil, errors.New("Must provide a user id")
 	}
 	values.Set("api_secret", gisqus.secret)
-	url := usersUrls.user_detail_url + "?" + values.Encode()
+	url := usersUrls.userDetailURL + "?" + values.Encode()
 	var udr UserDetailsResponse
 	err := gisqus.callAndInflate(url, &udr, ctx)
 	if err != nil {
@@ -83,10 +88,13 @@ func (gisqus *Gisqus) UserDetails(userId string, values url.Values, ctx context.
 	return &udr, nil
 }
 
-func (gisqus *Gisqus) UserInteresting(values url.Values, ctx context.Context) (*InterestingUsersResponse, error) {
+/*
+UserInteresting wraps https://disqus.com/api/docs/users/interestingUsers/ (https://disqus.com/api/3.0/users/interestingUsers.json)
+*/
+func (gisqus *Gisqus) UserInteresting(ctx context.Context, values url.Values) (*InterestingUsersResponse, error) {
 
 	values.Set("api_secret", gisqus.secret)
-	url := usersUrls.user_interesting_users_url + "?" + values.Encode()
+	url := usersUrls.userInterestingIUsersURL + "?" + values.Encode()
 	var iur InterestingUsersResponse
 
 	err := gisqus.callAndInflate(url, &iur, ctx)
@@ -103,14 +111,17 @@ func (gisqus *Gisqus) UserInteresting(values url.Values, ctx context.Context) (*
 	return &iur, nil
 }
 
-func (gisqus *Gisqus) UserActiveForums(user string, values url.Values, ctx context.Context) (*ActiveForumsResponse, error) {
+/*
+UserActiveForums wraps https://disqus.com/api/docs/users/listActiveForums/ (https://disqus.com/api/3.0/users/listActiveForums.json)
+*/
+func (gisqus *Gisqus) UserActiveForums(ctx context.Context, user string, values url.Values) (*ActiveForumsResponse, error) {
 
 	if user == "" {
 		return nil, errors.New("Must provide a user id")
 	}
 	values.Set("user", user)
 	values.Set("api_secret", gisqus.secret)
-	url := usersUrls.user_active_forums + "?" + values.Encode()
+	url := usersUrls.userActiveForums + "?" + values.Encode()
 
 	var afr ActiveForumsResponse
 	err := gisqus.callAndInflate(url, &afr, ctx)
@@ -128,15 +139,16 @@ func (gisqus *Gisqus) UserActiveForums(user string, values url.Values, ctx conte
 }
 
 /*
-Numlikes, NumPosts, NumFollowers are not returned
+UserFollowers wraps https://disqus.com/api/docs/users/listFollowers/ (https://disqus.com/api/3.0/users/listFollowers.json)
+Numlikes, NumPosts, NumFollowers are not returned by Disqus' API
 */
-func (gisqus *Gisqus) UserFollowers(userId string, values url.Values, ctx context.Context) (*UserListResponse, error) {
-	if userId == "" {
+func (gisqus *Gisqus) UserFollowers(ctx context.Context, userID string, values url.Values) (*UserListResponse, error) {
+	if userID == "" {
 		return nil, errors.New("Must provide a user id")
 	}
-	values.Set("user", userId)
+	values.Set("user", userID)
 	values.Set("api_secret", gisqus.secret)
-	url := usersUrls.user_followers + "?" + values.Encode()
+	url := usersUrls.userFollowers + "?" + values.Encode()
 	var fr UserListResponse
 
 	err := gisqus.callAndInflate(url, &fr, ctx)
@@ -154,15 +166,16 @@ func (gisqus *Gisqus) UserFollowers(userId string, values url.Values, ctx contex
 }
 
 /*
-Numlikes, NumPosts, NumFollowers are not returned
+UserFollowing wraps https://disqus.com/api/docs/users/listFollowing/ (https://disqus.com/api/3.0/users/listFollowing.json)
+Numlikes, NumPosts, NumFollowers are not returned by Disqus' API
 */
-func (gisqus *Gisqus) UserFollowing(userId string, values url.Values, ctx context.Context) (*UserListResponse, error) {
-	if userId == "" {
+func (gisqus *Gisqus) UserFollowing(ctx context.Context, userID string, values url.Values) (*UserListResponse, error) {
+	if userID == "" {
 		return nil, errors.New("Must provide a user id")
 	}
-	values.Set("user", userId)
+	values.Set("user", userID)
 	values.Set("api_secret", gisqus.secret)
-	url := usersUrls.user_following + "?" + values.Encode()
+	url := usersUrls.userFollowing + "?" + values.Encode()
 	var fr UserListResponse
 
 	err := gisqus.callAndInflate(url, &fr, ctx)
@@ -179,14 +192,17 @@ func (gisqus *Gisqus) UserFollowing(userId string, values url.Values, ctx contex
 	return &fr, nil
 }
 
-func (gisqus *Gisqus) UserForumFollowing(user string, values url.Values, ctx context.Context) (*UserForumFollowingResponse, error) {
+/*
+UserForumFollowing wraps https://disqus.com/api/docs/users/listFollowingForums/ (https://disqus.com/api/3.0/users/listFollowingForums.json)
+*/
+func (gisqus *Gisqus) UserForumFollowing(ctx context.Context, user string, values url.Values) (*UserForumFollowingResponse, error) {
 
 	if user == "" {
 		return nil, errors.New("Must provide a user id")
 	}
 	values.Set("user", user)
 	values.Set("api_secret", gisqus.secret)
-	url := usersUrls.user_following_forums + "?" + values.Encode()
+	url := usersUrls.userFollowingForums + "?" + values.Encode()
 
 	var uffr UserForumFollowingResponse
 	err := gisqus.callAndInflate(url, &uffr, ctx)
@@ -203,40 +219,48 @@ func (gisqus *Gisqus) UserForumFollowing(user string, values url.Values, ctx con
 	return &uffr, nil
 }
 
+//UserListResponse models the response of various user endpoints.
 type UserListResponse struct {
 	ResponseStubWithCursor
 	Response []*User `json:"response"`
 }
+
+// ActiveForumsResponse models the response of the active forums user endpoint.
 type ActiveForumsResponse struct {
 	ResponseStubWithCursor
 	Response []*Forum `json:"response"`
 }
 
+// InterestingUsersResponse models the response of the interesting users endpoint.
 type InterestingUsersResponse struct {
 	ResponseStubWithCursor
 	Response *InterestingUsers `json:"response"`
 }
 
+// InterestingUsers models the objects returned by the interesting users endpoint.
 type InterestingUsers struct {
 	Items   []*InterestingItem `json:"items"`
 	Objects map[string]*User   `json:"objects"`
 }
 
+// UserDetailsResponse models the response of the user detail endpoint
 type UserDetailsResponse struct {
 	ResponseStub
 	Response *User `json:"response"`
 }
 
+// UserForumFollowingResponse models the response of the user forum following endpoint.
 type UserForumFollowingResponse struct {
 	ResponseStubWithCursor
 	Response []*Forum `json:"response"`
 }
 
+// User models the user object returned by the user detail endpoint.
 type User struct {
 	Disable3rdPartyTrackers bool        `json:"disable3rdPartyTrackers"`
 	IsPowerContributor      bool        `json:"isPowerContributor"`
 	IsPrimary               bool        `json:"isPrimary"`
-	Id                      string      `json:"id"`
+	ID                      string      `json:"id"`
 	NumFollowers            int         `json:"numFollowers"`
 	Rep                     float32     `json:"rep"`
 	NumFollowing            int         `json:"numFollowing"`
@@ -250,15 +274,16 @@ type User struct {
 	ReputationLabel         string      `json:"reputationLabel"`
 	About                   string      `json:"about"`
 	Name                    string      `json:"name"`
-	Url                     string      `json:"url"`
+	URL                     string      `json:"url"`
 	NumForumsFollowing      int         `json:"numForumsFollowing"`
-	ProfileUrl              string      `json:"profileUrl"`
+	ProfileURL              string      `json:"profileUrl"`
 	Reputation              float32     `json:"reputation"`
 	Avatar                  *UserAvatar `json:"avatar"`
-	SignedUrl               string      `json:"signedUrl"`
+	SignedURL               string      `json:"signedUrl"`
 	IsAnonymous             bool        `json:"isAnonymous"`
 }
 
+// UserAvatar models the avatar field of the user object.
 type UserAvatar struct {
 	Small *Icon `json:"small"`
 	Large *Icon `json:"large"`
