@@ -198,10 +198,10 @@ func (ms *MockServer) readFile(fileName string) (string, error) {
 // NewServer returns a Server initialized with gisqus test data and urls
 func (ms *MockServer) NewServer() *httptest.Server {
 
-	m.initForums()
-	m.initPosts()
-	m.initThreads()
-	m.initUsers()
+	ms.initForums()
+	ms.initPosts()
+	ms.initThreads()
+	ms.initUsers()
 
 	f := func(w http.ResponseWriter, r *http.Request) {
 		w.Header().Set("X-Ratelimit-Remaining", "999")
