@@ -9,25 +9,25 @@ import (
 
 // ForumsURLS contains the URLs of the API calls for forums on Disqus
 type ForumsURLS struct {
-	forumInterestingForumsURL string
-	forumDetailsURL           string
-	forumCategoriesURL        string
-	forumListUsers            string
-	forumListThreads          string
-	forumMostLikedUsers       string
-	forumListFollowers        string
-	forumMostActiveUsers      string
+	InterestingForumsURL string
+	DetailsURL           string
+	CategoriesURL        string
+	ListUsersURL         string
+	ListThreadsURL       string
+	MostLikedUsersURL    string
+	ListFollowersURL     string
+	MostActiveUsersURL   string
 }
 
 var forumsUrls = ForumsURLS{
-	forumInterestingForumsURL: "https://disqus.com/api/3.0/forums/interestingForums",
-	forumDetailsURL:           "https://disqus.com/api/3.0/forums/details.json",
-	forumCategoriesURL:        "https://disqus.com/api/3.0/forums/listCategories.json",
-	forumListUsers:            "https://disqus.com/api/3.0/forums/listUsers.json",
-	forumListThreads:          "https://disqus.com/api/3.0/forums/listThreads.json",
-	forumMostLikedUsers:       "https://disqus.com/api/3.0/forums/listMostLikedUsers.json",
-	forumListFollowers:        "https://disqus.com/api/3.0/forums/listFollowers.json",
-	forumMostActiveUsers:      "https://disqus.com/api/3.0/forums/listMostActiveUsers.json",
+	InterestingForumsURL: "https://disqus.com/api/3.0/forums/interestingForums",
+	DetailsURL:           "https://disqus.com/api/3.0/forums/details.json",
+	CategoriesURL:        "https://disqus.com/api/3.0/forums/listCategories.json",
+	ListUsersURL:         "https://disqus.com/api/3.0/forums/listUsers.json",
+	ListThreadsURL:       "https://disqus.com/api/3.0/forums/listThreads.json",
+	MostLikedUsersURL:    "https://disqus.com/api/3.0/forums/listMostLikedUsers.json",
+	ListFollowersURL:     "https://disqus.com/api/3.0/forums/listFollowers.json",
+	MostActiveUsersURL:   "https://disqus.com/api/3.0/forums/listMostActiveUsers.json",
 }
 
 func (gisqus *Gisqus) ForumMostActiveUsers(ctx context.Context, forum string, values url.Values) (*ForumUserListResponse, error) {
@@ -37,7 +37,7 @@ func (gisqus *Gisqus) ForumMostActiveUsers(ctx context.Context, forum string, va
 	}
 	values.Set("api_secret", gisqus.secret)
 	values.Set("forum", forum)
-	url := forumsUrls.forumListFollowers + "?" + values.Encode()
+	url := forumsUrls.ListFollowersURL + "?" + values.Encode()
 
 	var fulr ForumUserListResponse
 	err := gisqus.callAndInflate(url, &fulr, ctx)
@@ -61,7 +61,7 @@ func (gisqus *Gisqus) ForumFollowers(ctx context.Context, forum string, values u
 	}
 	values.Set("api_secret", gisqus.secret)
 	values.Set("forum", forum)
-	url := forumsUrls.forumListFollowers + "?" + values.Encode()
+	url := forumsUrls.ListFollowersURL + "?" + values.Encode()
 
 	var fulr ForumUserListResponse
 	err := gisqus.callAndInflate(url, &fulr, ctx)
@@ -88,7 +88,7 @@ func (gisqus *Gisqus) ForumUsers(ctx context.Context, forum string, values url.V
 	}
 	values.Set("api_secret", gisqus.secret)
 	values.Set("forum", forum)
-	url := forumsUrls.forumListUsers + "?" + values.Encode()
+	url := forumsUrls.ListUsersURL + "?" + values.Encode()
 
 	var fulr ForumUserListResponse
 	err := gisqus.callAndInflate(url, &fulr, ctx)
@@ -111,7 +111,7 @@ ForumInteresting wraps https://disqus.com/api/docs/forums/interestingForums/ (ht
 func (gisqus *Gisqus) ForumInteresting(ctx context.Context, values url.Values) (*InterestingForumsResponse, error) {
 
 	values.Set("api_secret", gisqus.secret)
-	url := forumsUrls.forumInterestingForumsURL + "?" + values.Encode()
+	url := forumsUrls.InterestingForumsURL + "?" + values.Encode()
 
 	var ifr InterestingForumsResponse
 	err := gisqus.callAndInflate(url, &ifr, ctx)
@@ -139,7 +139,7 @@ func (gisqus *Gisqus) ForumDetails(ctx context.Context, forum string, values url
 	}
 	values.Set("api_secret", gisqus.secret)
 	values.Set("forum", forum)
-	url := forumsUrls.forumDetailsURL + "?" + values.Encode()
+	url := forumsUrls.DetailsURL + "?" + values.Encode()
 
 	var fdr ForumDetailsResponse
 
@@ -165,7 +165,7 @@ func (gisqus *Gisqus) ForumCategories(ctx context.Context, forum string, values 
 	}
 	values.Set("forum", forum)
 	values.Set("api_secret", gisqus.secret)
-	url := forumsUrls.forumCategoriesURL + "?" + values.Encode()
+	url := forumsUrls.CategoriesURL + "?" + values.Encode()
 
 	var clr CategoriesListResponse
 
@@ -186,7 +186,7 @@ func (gisqus *Gisqus) ForumThreads(ctx context.Context, forum string, values url
 	}
 	values.Set("forum", forum)
 	values.Set("api_secret", gisqus.secret)
-	url := forumsUrls.forumListThreads + "?" + values.Encode()
+	url := forumsUrls.ListThreadsURL + "?" + values.Encode()
 
 	var tlr ThreadListResponse
 
@@ -215,7 +215,7 @@ func (gisqus *Gisqus) ForumMostLikedUsers(ctx context.Context, forum string, val
 	}
 	values.Set("api_secret", gisqus.secret)
 	values.Set("forum", forum)
-	url := forumsUrls.forumMostLikedUsers + "?" + values.Encode()
+	url := forumsUrls.MostLikedUsersURL + "?" + values.Encode()
 
 	var mlur MostLikedUsersResponse
 	err := gisqus.callAndInflate(url, &mlur, ctx)

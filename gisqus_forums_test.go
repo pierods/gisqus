@@ -77,7 +77,7 @@ func TestForumMostActiveUsers(t *testing.T) {
 	mockServer = mock.NewMockServer()
 	defer mockServer.Close()
 
-	forumsUrls.forumListFollowers, err = mockServer.SwitchHostAndScheme(forumsUrls.forumMostActiveUsers, forumMostActiveUsersJSON)
+	forumsUrls.ListFollowersURL, err = mockServer.SwitchHostAndScheme(forumsUrls.MostActiveUsersURL, forumMostActiveUsersJSON)
 	if err != nil {
 		t.Fatal(err)
 	}
@@ -116,7 +116,7 @@ func TestForumFollowers(t *testing.T) {
 	mockServer = mock.NewMockServer()
 	defer mockServer.Close()
 
-	forumsUrls.forumListFollowers, err = mockServer.SwitchHostAndScheme(forumsUrls.forumListFollowers, forumFollowersJSON)
+	forumsUrls.ListFollowersURL, err = mockServer.SwitchHostAndScheme(forumsUrls.ListFollowersURL, forumFollowersJSON)
 	if err != nil {
 		t.Fatal(err)
 	}
@@ -155,7 +155,7 @@ func TestForumUsers(t *testing.T) {
 	mockServer = mock.NewMockServer()
 	defer mockServer.Close()
 
-	forumsUrls.forumListUsers, err = mockServer.SwitchHostAndScheme(forumsUrls.forumListUsers, forumListUsersJSON)
+	forumsUrls.ListUsersURL, err = mockServer.SwitchHostAndScheme(forumsUrls.ListUsersURL, forumListUsersJSON)
 	if err != nil {
 		t.Fatal(err)
 	}
@@ -194,7 +194,7 @@ func TestForumsInteresting(t *testing.T) {
 	mockServer = mock.NewMockServer()
 	defer mockServer.Close()
 
-	forumsUrls.forumInterestingForumsURL, err = mockServer.SwitchHostAndScheme(forumsUrls.forumInterestingForumsURL, forumInterestingForumsJSON)
+	forumsUrls.InterestingForumsURL, err = mockServer.SwitchHostAndScheme(forumsUrls.InterestingForumsURL, forumInterestingForumsJSON)
 	if err != nil {
 		t.Fatal(err)
 	}
@@ -242,7 +242,7 @@ func TestForumDetails(t *testing.T) {
 	mockServer = mock.NewMockServer()
 	defer mockServer.Close()
 
-	forumsUrls.forumDetailsURL, err = mockServer.SwitchHostAndScheme(forumsUrls.forumDetailsURL, forumDetailsJSON)
+	forumsUrls.DetailsURL, err = mockServer.SwitchHostAndScheme(forumsUrls.DetailsURL, forumDetailsJSON)
 	if err != nil {
 		t.Fatal(err)
 	}
@@ -275,7 +275,7 @@ func TestForumCategories(t *testing.T) {
 	mockServer = mock.NewMockServer()
 	defer mockServer.Close()
 
-	forumsUrls.forumCategoriesURL, err = mockServer.SwitchHostAndScheme(forumsUrls.forumCategoriesURL, forumListCategoriesJSON)
+	forumsUrls.CategoriesURL, err = mockServer.SwitchHostAndScheme(forumsUrls.CategoriesURL, forumListCategoriesJSON)
 	if err != nil {
 		t.Fatal(err)
 	}
@@ -306,7 +306,7 @@ func TestForumThreads(t *testing.T) {
 	mockServer = mock.NewMockServer()
 	defer mockServer.Close()
 
-	forumsUrls.forumListThreads, err = mockServer.SwitchHostAndScheme(forumsUrls.forumListThreads, forumThreadListJSON)
+	forumsUrls.ListThreadsURL, err = mockServer.SwitchHostAndScheme(forumsUrls.ListThreadsURL, forumThreadListJSON)
 	if err != nil {
 		t.Fatal(err)
 	}
@@ -351,7 +351,7 @@ func TestForumMostLikedUsers(t *testing.T) {
 	mockServer = mock.NewMockServer()
 	defer mockServer.Close()
 
-	forumsUrls.forumMostLikedUsers, err = mockServer.SwitchHostAndScheme(forumsUrls.forumMostLikedUsers, forumMostLikedUsersJSON)
+	forumsUrls.MostLikedUsersURL, err = mockServer.SwitchHostAndScheme(forumsUrls.MostLikedUsersURL, forumMostLikedUsersJSON)
 	if err != nil {
 		t.Fatal(err)
 	}
@@ -385,7 +385,7 @@ func TestRetrieveCursor(t *testing.T) {
 	mockServer = mock.NewMockServer()
 	defer mockServer.Close()
 
-	forumsUrls.forumListUsers, err = mockServer.SwitchHostAndScheme(forumsUrls.forumListUsers, forumListUsersJSON)
+	forumsUrls.ListUsersURL, err = mockServer.SwitchHostAndScheme(forumsUrls.ListUsersURL, forumListUsersJSON)
 	if err != nil {
 		t.Fatal(err)
 	}

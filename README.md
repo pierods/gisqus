@@ -32,11 +32,11 @@ https://disqus.com/api/docs/
 ##### Threads
 * details
 * list
-* listHot Beta
-* listPopular Beta
+* listHot 
+* listPopular 
 * listPosts
- listUsersVotedThread
- set
+* listUsersVotedThread
+* set
 
 ##### Posts
 * details
@@ -45,7 +45,6 @@ https://disqus.com/api/docs/
  listPopular
 
 ##### Users
-
 * details 
 * interestingUsers
 * listActiveForums

@@ -16,11 +16,23 @@ var (
 	threadListHotJSON      string
 	threadListPopularJSON  string
 	threadListTrendingJSON string
+	threadUsersVotedJSON   string
+	threadSetJSON          string
 )
 
 func init() {
 
 	var err error
+	threadSetJSON, err = readFile("threadsset.json")
+	if err != nil {
+		fmt.Println(err)
+		os.Exit(-1)
+	}
+	threadUsersVotedJSON, err = readFile("threadsusersvoted.json")
+	if err != nil {
+		fmt.Println(err)
+		os.Exit(-1)
+	}
 	threadListJSON, err = readFile("threadsthreadlist.json")
 	if err != nil {
 		fmt.Println(err)
@@ -52,6 +64,92 @@ func init() {
 		os.Exit(-1)
 	}
 }
+func TestThreadUsersVoted(t *testing.T) {
+
+	mockServer = mock.NewMockServer()
+	defer mockServer.Close()
+
+	threadsUrls.ThreadUsersVoted, err = mockServer.SwitchHostAndScheme(threadsUrls.ThreadUsersVoted, threadUsersVotedJSON)
+	if err != nil {
+		t.Fatal(err)
+	}
+	testValues = url.Values{}
+
+	_, err = testGisqus.ThreadDetails(testCtx, "", testValues)
+	if err == nil {
+		t.Fatal("Should check for an empty thread id")
+	}
+	users, err := testGisqus.ThreadUsersVoted(testCtx, "5846923796", testValues)
+	if err != nil {
+		t.Fatal(err)
+	}
+
+	if len(users.Response) != 5 {
+		t.Fatal("Should be able to parse result set entirely")
+	}
+	if users.Response[0].ID != "19365741" {
+		t.Fatal("Should be able to retrieve a user id")
+	}
+	if users.Response[0].IsPowerContributor {
+		t.Fatal("Should be able to retrieve a user's power contributor")
+	}
+	if ToDisqusTime(users.Response[0].JoinedAt) != "2011-11-22T10:43:15" {
+		t.Fatal("Should be able to retrieve a user's joined at")
+	}
+	if users.Response[0].Username != "bigboss400" {
+		t.Fatal("Should be able to retrieve a user's username")
+	}
+}
+
+func TestThreadSet(t *testing.T) {
+
+	mockServer = mock.NewMockServer()
+	defer mockServer.Close()
+
+	threadsUrls.ThreadSet, err = mockServer.SwitchHostAndScheme(threadsUrls.ThreadSet, threadSetJSON)
+	if err != nil {
+		t.Fatal(err)
+	}
+	testValues = url.Values{}
+
+	_, err = testGisqus.ThreadSet(testCtx, []string{}, testValues)
+	if err == nil {
+		t.Fatal("Should check for an empty thread id")
+	}
+	_, err = testGisqus.ThreadSet(testCtx, nil, testValues)
+	if err == nil {
+		t.Fatal("Should check for an empty thread id")
+	}
+	threads, err := testGisqus.ThreadSet(testCtx, []string{"5903840168", "5850192558"}, testValues)
+	if err != nil {
+		t.Fatal(err)
+	}
+	if len(threads.Response) != 2 {
+		t.Fatal("Should be able to correctly parse a thread list")
+	}
+	if threads.Response[0].Feed != "https://tmz.disqus.com/039bachelor_in_paradise039_star_corinne_olympios_says_she_didn039t_consent_to_sexual_contact_with_de/latest.rss" {
+		t.Fatal("Should be able to retrieve a thread's feed url")
+	}
+	if threads.Response[0].ID != "5903840168" {
+		t.Fatal("Should be able to retrieve a thread's id")
+	}
+	if threads.Response[0].Category != "3341905" {
+		t.Fatal("Should be able to retrieve a thread's category")
+	}
+	if threads.Response[0].Author != "116162885" {
+		t.Fatal("Should be able to retrieve a thread's author")
+	}
+	if ToDisqusTime(threads.Response[0].CreatedAt) != "2017-06-12T17:48:04" {
+		t.Fatal("Should be able to retrieve a thread's created at")
+	}
+	if threads.Response[0].Forum != "tmz" {
+		t.Fatal("Should be able to retrieve a thread's forum id")
+	}
+	if threads.Response[0].Title != "&#039;Bachelor in Paradise&#039; Star Corinne Olympios Says She Didn&#039;t Consent to Sexual Contact with DeMario Jackson" {
+		t.Fatal("Should be able to retrieve a thread's title")
+	}
+}
+
 func TestThreadList(t *testing.T) {
 
 	mockServer = mock.NewMockServer()

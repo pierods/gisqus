@@ -9,21 +9,53 @@ import (
 
 // ThreadsURLS are the URLs of the thread endpoints of the Disqus' API
 type ThreadsURLS struct {
-	ThreadList      string
-	ThreadDetailURL string
-	ThreadPosts     string
-	ThreadHot       string
-	ThreadPopular   string
-	ThreadTrending  string
+	ThreadList       string
+	ThreadDetailURL  string
+	ThreadPosts      string
+	ThreadHot        string
+	ThreadPopular    string
+	ThreadTrending   string
+	ThreadUsersVoted string
+	ThreadSet        string
 }
 
 var threadsUrls = ThreadsURLS{
-	ThreadList:      "https://disqus.com/api/3.0/threads/list.json",
-	ThreadDetailURL: "https://disqus.com/api/3.0/threads/details.json",
-	ThreadPosts:     "https://disqus.com/api/3.0/threads/listPosts.json",
-	ThreadHot:       "https://disqus.com/api/3.0/threads/listHot.json",
-	ThreadPopular:   "https://disqus.com/api/3.0/threads/listPopular.json",
-	ThreadTrending:  "https://disqus.com/api/3.0/trends/listThreads.json",
+	ThreadList:       "https://disqus.com/api/3.0/threads/list.json",
+	ThreadDetailURL:  "https://disqus.com/api/3.0/threads/details.json",
+	ThreadPosts:      "https://disqus.com/api/3.0/threads/listPosts.json",
+	ThreadHot:        "https://disqus.com/api/3.0/threads/listHot.json",
+	ThreadPopular:    "https://disqus.com/api/3.0/threads/listPopular.json",
+	ThreadTrending:   "https://disqus.com/api/3.0/trends/listThreads.json",
+	ThreadUsersVoted: "https://disqus.com/api/3.0/threads/listUsersVotedThread.json",
+	ThreadSet:        "https://disqus.com/api/3.0/threads/set.json",
+}
+
+/*
+complete users are not returned
+*/
+func (gisqus *Gisqus) ThreadUsersVoted(ctx context.Context, thread string, values url.Values) (*UsersVotedResponse, error) {
+
+	if thread == "" {
+		return nil, errors.New("Must provide a thread id")
+	}
+	values.Set("thread", thread)
+	values.Set("api_secret", gisqus.secret)
+	url := threadsUrls.ThreadUsersVoted + "?" + values.Encode()
+
+	var uvr UsersVotedResponse
+
+	err := gisqus.callAndInflate(url, &uvr, ctx)
+	if err != nil {
+		return nil, err
+	}
+
+	for _, user := range uvr.Response {
+		user.JoinedAt, err = fromDisqusTime(user.DisqusTimeJoinedAt)
+		if err != nil {
+			return nil, err
+		}
+	}
+	return &uvr, nil
 }
 
 /*
@@ -82,6 +114,33 @@ func (gisqus *Gisqus) ThreadTrending(ctx context.Context, values url.Values) (*T
 			if err != nil {
 				return nil, err
 			}
+		}
+	}
+	return &tlr, nil
+
+}
+
+func (gisqus *Gisqus) ThreadSet(ctx context.Context, threads []string, values url.Values) (*ThreadListResponseNoCursor, error) {
+
+	if threads == nil || len(threads) == 0 {
+		return nil, errors.New("Must provide one or more thread ids")
+	}
+	for _, thread := range threads {
+		values.Add("thread", thread)
+	}
+	values.Set("api_secret", gisqus.secret)
+	url := threadsUrls.ThreadSet + "?" + values.Encode()
+
+	var tlr ThreadListResponseNoCursor
+
+	err := gisqus.callAndInflate(url, &tlr, ctx)
+	if err != nil {
+		return nil, err
+	}
+	for _, thread := range tlr.Response {
+		thread.CreatedAt, err = fromDisqusTime(thread.DisqusTimeCreatedAt)
+		if err != nil {
+			return nil, err
 		}
 	}
 	return &tlr, nil
@@ -196,6 +255,11 @@ func (gisqus *Gisqus) ThreadPopular(ctx context.Context, values url.Values) (*Th
 		}
 	}
 	return &tlr, nil
+}
+
+type UsersVotedResponse struct {
+	ResponseStub
+	Response []*User `json:"response"`
 }
 
 // ThreadDetailResponse models the response of the thread details endpoint.
