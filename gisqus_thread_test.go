@@ -1,18 +1,63 @@
 package gisqus
 
 import (
+	"fmt"
 	"net/url"
+	"os"
 	"testing"
 
 	"github.com/pierods/gisqus/mock"
 )
 
+var (
+	threadListJSON         string
+	threadDetailsJSON      string
+	threadPostsJSON        string
+	threadListHotJSON      string
+	threadListPopularJSON  string
+	threadListTrendingJSON string
+)
+
+func init() {
+
+	var err error
+	threadListJSON, err = readFile("threadsthreadlist.json")
+	if err != nil {
+		fmt.Println(err)
+		os.Exit(-1)
+	}
+	threadDetailsJSON, err = readFile("threadsthreaddetails.json")
+	if err != nil {
+		fmt.Println(err)
+		os.Exit(-1)
+	}
+	threadPostsJSON, err = readFile("threadsthreadposts.json")
+	if err != nil {
+		fmt.Println(err)
+		os.Exit(-1)
+	}
+	threadListHotJSON, err = readFile("threadshotlist.json")
+	if err != nil {
+		fmt.Println(err)
+		os.Exit(-1)
+	}
+	threadListPopularJSON, err = readFile("threadspopular.json")
+	if err != nil {
+		fmt.Println(err)
+		os.Exit(-1)
+	}
+	threadListTrendingJSON, err = readFile("threadstrending.json")
+	if err != nil {
+		fmt.Println(err)
+		os.Exit(-1)
+	}
+}
 func TestThreadList(t *testing.T) {
 
-	mockServer = ms.NewServer()
+	mockServer = mock.NewMockServer()
 	defer mockServer.Close()
 
-	threadsUrls.ThreadList, err = mock.SwitchHostAndScheme(threadsUrls.ThreadList, mockServer.URL)
+	threadsUrls.ThreadList, err = mockServer.SwitchHostAndScheme(threadsUrls.ThreadList, threadListJSON)
 	if err != nil {
 		t.Fatal(err)
 	}
@@ -50,10 +95,10 @@ func TestThreadList(t *testing.T) {
 
 func TestThreadDetails(t *testing.T) {
 
-	mockServer = ms.NewServer()
+	mockServer = mock.NewMockServer()
 	defer mockServer.Close()
 
-	threadsUrls.ThreadDetailURL, err = mock.SwitchHostAndScheme(threadsUrls.ThreadDetailURL, mockServer.URL)
+	threadsUrls.ThreadDetailURL, err = mockServer.SwitchHostAndScheme(threadsUrls.ThreadDetailURL, threadDetailsJSON)
 	if err != nil {
 		t.Fatal(err)
 	}
@@ -89,10 +134,10 @@ func TestThreadDetails(t *testing.T) {
 
 func TestThreadPosts(t *testing.T) {
 
-	mockServer = ms.NewServer()
+	mockServer = mock.NewMockServer()
 	defer mockServer.Close()
 
-	threadsUrls.ThreadPosts, err = mock.SwitchHostAndScheme(threadsUrls.ThreadPosts, mockServer.URL)
+	threadsUrls.ThreadPosts, err = mockServer.SwitchHostAndScheme(threadsUrls.ThreadPosts, threadPostsJSON)
 	if err != nil {
 		t.Fatal(err)
 	}
@@ -135,10 +180,10 @@ func TestThreadPosts(t *testing.T) {
 
 func TestThreadListHot(t *testing.T) {
 
-	mockServer = ms.NewServer()
+	mockServer = mock.NewMockServer()
 	defer mockServer.Close()
 
-	threadsUrls.ThreadHot, err = mock.SwitchHostAndScheme(threadsUrls.ThreadHot, mockServer.URL)
+	threadsUrls.ThreadHot, err = mockServer.SwitchHostAndScheme(threadsUrls.ThreadHot, threadListHotJSON)
 	if err != nil {
 		t.Fatal(err)
 	}
@@ -176,10 +221,10 @@ func TestThreadListHot(t *testing.T) {
 
 func TestThreadListPopular(t *testing.T) {
 
-	mockServer = ms.NewServer()
+	mockServer = mock.NewMockServer()
 	defer mockServer.Close()
 
-	threadsUrls.ThreadPopular, err = mock.SwitchHostAndScheme(threadsUrls.ThreadPopular, mockServer.URL)
+	threadsUrls.ThreadPopular, err = mockServer.SwitchHostAndScheme(threadsUrls.ThreadPopular, threadListPopularJSON)
 	if err != nil {
 		t.Fatal(err)
 	}
@@ -217,10 +262,10 @@ func TestThreadListPopular(t *testing.T) {
 
 func TestThreadListTrending(t *testing.T) {
 
-	mockServer = ms.NewServer()
+	mockServer = mock.NewMockServer()
 	defer mockServer.Close()
 
-	threadsUrls.ThreadTrending, err = mock.SwitchHostAndScheme(threadsUrls.ThreadTrending, mockServer.URL)
+	threadsUrls.ThreadTrending, err = mockServer.SwitchHostAndScheme(threadsUrls.ThreadTrending, threadListTrendingJSON)
 	if err != nil {
 		t.Fatal(err)
 	}

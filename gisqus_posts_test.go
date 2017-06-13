@@ -1,18 +1,40 @@
 package gisqus
 
 import (
+	"fmt"
 	"net/url"
+	"os"
 	"testing"
 
 	"github.com/pierods/gisqus/mock"
 )
 
+var (
+	postDetailsJSON string
+	postListJSON    string
+)
+
+func init() {
+
+	var err error
+	postDetailsJSON, err = readFile("postspostdetails.json")
+	if err != nil {
+		fmt.Println(err)
+		os.Exit(-1)
+	}
+	postListJSON, err = readFile("postspostlist.json")
+	if err != nil {
+		fmt.Println(err)
+		os.Exit(-1)
+	}
+}
+
 func TestPostDetails(t *testing.T) {
-	mockServer = ms.NewServer()
+	mockServer = mock.NewMockServer()
 	defer mockServer.Close()
 	testValues = url.Values{}
 
-	postsUrls.postDetailsURL, err = mock.SwitchHostAndScheme(postsUrls.postDetailsURL, mockServer.URL)
+	postsUrls.postDetailsURL, err = mockServer.SwitchHostAndScheme(postsUrls.postDetailsURL, postDetailsJSON)
 	if err != nil {
 		t.Fatal(err)
 	}
@@ -49,10 +71,10 @@ func TestPostDetails(t *testing.T) {
 
 func TestPostList(t *testing.T) {
 
-	mockServer = ms.NewServer()
+	mockServer = mock.NewMockServer()
 	defer mockServer.Close()
 
-	postsUrls.postListURL, err = mock.SwitchHostAndScheme(postsUrls.postListURL, mockServer.URL)
+	postsUrls.postListURL, err = mockServer.SwitchHostAndScheme(postsUrls.postListURL, postListJSON)
 	if err != nil {
 		t.Fatal(err)
 	}

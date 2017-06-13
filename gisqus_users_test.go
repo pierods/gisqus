@@ -1,18 +1,70 @@
 package gisqus
 
 import (
+	"fmt"
 	"net/url"
+	"os"
 	"testing"
 
 	"github.com/pierods/gisqus/mock"
 )
 
+var (
+	usersListPostsJSON        string
+	usersUserDetailsJSON      string
+	usersInterestingUsersJSON string
+	usersActiveForumsJSON     string
+	usersFollowersJSON        string
+	usersFollowingJSON        string
+	usersForumFollowingJSON   string
+)
+
+func init() {
+
+	var err error
+	usersListPostsJSON, err = readFile("userslistposts.json")
+	if err != nil {
+		fmt.Println(err)
+		os.Exit(-1)
+	}
+	usersUserDetailsJSON, err = readFile("usersuserdetail.json")
+	if err != nil {
+		fmt.Println(err)
+		os.Exit(-1)
+	}
+	usersInterestingUsersJSON, err = readFile("usersinterestingusers.json")
+	if err != nil {
+		fmt.Println(err)
+		os.Exit(-1)
+	}
+	usersActiveForumsJSON, err = readFile("usersactiveforums.json")
+	if err != nil {
+		fmt.Println(err)
+		os.Exit(-1)
+	}
+	usersFollowersJSON, err = readFile("usersfollowers.json")
+	if err != nil {
+		fmt.Println(err)
+		os.Exit(-1)
+	}
+	usersFollowingJSON, err = readFile("usersfollowing.json")
+	if err != nil {
+		fmt.Println(err)
+		os.Exit(-1)
+	}
+	usersForumFollowingJSON, err = readFile("usersfollowingforums.json")
+	if err != nil {
+		fmt.Println(err)
+		os.Exit(-1)
+	}
+}
+
 func TestUserPosts(t *testing.T) {
 
-	mockServer = ms.NewServer()
+	mockServer = mock.NewMockServer()
 	defer mockServer.Close()
 
-	usersUrls.userPostListURL, err = mock.SwitchHostAndScheme(usersUrls.userPostListURL, mockServer.URL)
+	usersUrls.userPostListURL, err = mockServer.SwitchHostAndScheme(usersUrls.userPostListURL, usersListPostsJSON)
 	if err != nil {
 		t.Fatal(err)
 	}
@@ -54,10 +106,10 @@ func TestUserPosts(t *testing.T) {
 
 func TestUserDetails(t *testing.T) {
 
-	mockServer = ms.NewServer()
+	mockServer = mock.NewMockServer()
 	defer mockServer.Close()
 
-	usersUrls.userDetailURL, err = mock.SwitchHostAndScheme(usersUrls.userDetailURL, mockServer.URL)
+	usersUrls.userDetailURL, err = mockServer.SwitchHostAndScheme(usersUrls.userDetailURL, usersUserDetailsJSON)
 	if err != nil {
 		t.Fatal(err)
 	}
@@ -101,10 +153,10 @@ func TestUserDetails(t *testing.T) {
 
 func TestUserInteresting(t *testing.T) {
 
-	mockServer = ms.NewServer()
+	mockServer = mock.NewMockServer()
 	defer mockServer.Close()
 
-	usersUrls.userInterestingIUsersURL, err = mock.SwitchHostAndScheme(usersUrls.userInterestingIUsersURL, mockServer.URL)
+	usersUrls.userInterestingIUsersURL, err = mockServer.SwitchHostAndScheme(usersUrls.userInterestingIUsersURL, usersInterestingUsersJSON)
 	if err != nil {
 		t.Fatal(err)
 	}
@@ -143,10 +195,10 @@ func TestUserInteresting(t *testing.T) {
 
 func TestUserActiveForums(t *testing.T) {
 
-	mockServer = ms.NewServer()
+	mockServer = mock.NewMockServer()
 	defer mockServer.Close()
 
-	usersUrls.userActiveForums, err = mock.SwitchHostAndScheme(usersUrls.userActiveForums, mockServer.URL)
+	usersUrls.userActiveForums, err = mockServer.SwitchHostAndScheme(usersUrls.userActiveForums, usersActiveForumsJSON)
 	if err != nil {
 		t.Fatal(err)
 	}
@@ -183,10 +235,10 @@ func TestUserActiveForums(t *testing.T) {
 
 func TestUserFollowers(t *testing.T) {
 
-	mockServer = ms.NewServer()
+	mockServer = mock.NewMockServer()
 	defer mockServer.Close()
 
-	usersUrls.userFollowers, err = mock.SwitchHostAndScheme(usersUrls.userFollowers, mockServer.URL)
+	usersUrls.userFollowers, err = mockServer.SwitchHostAndScheme(usersUrls.userFollowers, usersFollowersJSON)
 	if err != nil {
 		t.Fatal(err)
 	}
@@ -220,10 +272,10 @@ func TestUserFollowers(t *testing.T) {
 
 func TestUserFollowing(t *testing.T) {
 
-	mockServer = ms.NewServer()
+	mockServer = mock.NewMockServer()
 	defer mockServer.Close()
 
-	usersUrls.userFollowing, err = mock.SwitchHostAndScheme(usersUrls.userFollowing, mockServer.URL)
+	usersUrls.userFollowing, err = mockServer.SwitchHostAndScheme(usersUrls.userFollowing, usersFollowingJSON)
 	if err != nil {
 		t.Fatal(err)
 	}
@@ -257,10 +309,10 @@ func TestUserFollowing(t *testing.T) {
 
 func TestUserForumFollowing(t *testing.T) {
 
-	mockServer = ms.NewServer()
+	mockServer = mock.NewMockServer()
 	defer mockServer.Close()
 
-	usersUrls.userFollowingForums, err = mock.SwitchHostAndScheme(usersUrls.userFollowingForums, mockServer.URL)
+	usersUrls.userFollowingForums, err = mockServer.SwitchHostAndScheme(usersUrls.userFollowingForums, usersForumFollowingJSON)
 	if err != nil {
 		t.Fatal(err)
 	}
