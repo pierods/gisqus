@@ -15,20 +15,26 @@ var (
 	forumDetailsJSON           string
 	forumListCategoriesJSON    string
 	forumThreadListJSON        string
-	forumMostLikedJSON         string
+	forumMostLikedUsersJSON    string
 	forumFollowersJSON         string
-
-	forumURLS ForumsURLS
+	forumMostActiveUsersJSON   string
 )
 
 func init() {
 
 	var err error
+
 	forumInterestingForumsJSON, err = readFile("forumsinterestingforums.json")
 	if err != nil {
 		fmt.Println(err)
 		os.Exit(-1)
 	}
+	forumMostActiveUsersJSON, err = readFile("forumslistmostactive.json")
+	if err != nil {
+		fmt.Println(err)
+		os.Exit(-1)
+	}
+
 	forumListUsersJSON, err = readFile("forumslistforumusers.json")
 	if err != nil {
 		fmt.Println(err)
@@ -53,7 +59,7 @@ func init() {
 		os.Exit(-1)
 
 	}
-	forumMostLikedJSON, err = readFile("forumsmostlikedusers.json")
+	forumMostLikedUsersJSON, err = readFile("forumsmostlikedusers.json")
 	if err != nil {
 		fmt.Println(err)
 		os.Exit(-1)
@@ -64,6 +70,45 @@ func init() {
 		fmt.Println(err)
 		os.Exit(-1)
 
+	}
+}
+
+func TestForumMostActiveUsers(t *testing.T) {
+	mockServer = mock.NewMockServer()
+	defer mockServer.Close()
+
+	forumsUrls.forumListFollowers, err = mockServer.SwitchHostAndScheme(forumsUrls.forumMostActiveUsers, forumMostActiveUsersJSON)
+	if err != nil {
+		t.Fatal(err)
+	}
+	testValues = url.Values{}
+	_, err = testGisqus.ForumMostActiveUsers(testCtx, "", testValues)
+	if err == nil {
+		t.Fatal("Should be able to reject a null forum")
+	}
+	users, err := testGisqus.ForumMostActiveUsers(testCtx, "mapleleafshotstove", testValues)
+	if err != nil {
+		t.Fatal("Should be able to call the forum followers endpoint - ", err)
+	}
+
+	if len(users.Response) != 24 {
+		t.Log(len(users.Response))
+		t.Fatal("Should be able to correctly parse a user list")
+	}
+	if users.Response[0].Username != "icechest" {
+		t.Fatal("Should be able to retrieve a username")
+	}
+	if users.Response[0].Rep != 23.690665 {
+		t.Fatal("Should be able to retrieve a reputation")
+	}
+	if ToDisqusTime(users.Response[0].JoinedAt) != "2015-07-06T22:57:31" {
+		t.Fatal("Should be able to retrieve a joined at date")
+	}
+	if users.Response[0].Avatar.Small.Permalink != "https://disqus.com/api/users/avatars/icechest.jpg" {
+		t.Fatal("Should be able to retrieve an avatar")
+	}
+	if users.Response[0].Avatar.Small.Cache != "https://c.disquscdn.com/uploads/users/16444/4895/avatar32.jpg?1461376631" {
+		t.Fatal("Should be able to retrieve an avatar")
 	}
 }
 
@@ -306,7 +351,7 @@ func TestForumMostLikedUsers(t *testing.T) {
 	mockServer = mock.NewMockServer()
 	defer mockServer.Close()
 
-	forumsUrls.forumMostLikedUsers, err = mockServer.SwitchHostAndScheme(forumsUrls.forumMostLikedUsers, forumMostLikedJSON)
+	forumsUrls.forumMostLikedUsers, err = mockServer.SwitchHostAndScheme(forumsUrls.forumMostLikedUsers, forumMostLikedUsersJSON)
 	if err != nil {
 		t.Fatal(err)
 	}

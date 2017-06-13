@@ -16,6 +16,7 @@ type ForumsURLS struct {
 	forumListThreads          string
 	forumMostLikedUsers       string
 	forumListFollowers        string
+	forumMostActiveUsers      string
 }
 
 var forumsUrls = ForumsURLS{
@@ -26,6 +27,31 @@ var forumsUrls = ForumsURLS{
 	forumListThreads:          "https://disqus.com/api/3.0/forums/listThreads.json",
 	forumMostLikedUsers:       "https://disqus.com/api/3.0/forums/listMostLikedUsers.json",
 	forumListFollowers:        "https://disqus.com/api/3.0/forums/listFollowers.json",
+	forumMostActiveUsers:      "https://disqus.com/api/3.0/forums/listMostActiveUsers.json",
+}
+
+func (gisqus *Gisqus) ForumMostActiveUsers(ctx context.Context, forum string, values url.Values) (*ForumUserListResponse, error) {
+
+	if forum == "" {
+		return nil, errors.New("Must provide a forum id")
+	}
+	values.Set("api_secret", gisqus.secret)
+	values.Set("forum", forum)
+	url := forumsUrls.forumListFollowers + "?" + values.Encode()
+
+	var fulr ForumUserListResponse
+	err := gisqus.callAndInflate(url, &fulr, ctx)
+	if err != nil {
+		return nil, err
+	}
+
+	for _, user := range fulr.Response {
+		user.JoinedAt, err = fromDisqusTime(user.DisqusTimeJoinedAt)
+		if err != nil {
+			return nil, err
+		}
+	}
+	return &fulr, nil
 }
 
 func (gisqus *Gisqus) ForumFollowers(ctx context.Context, forum string, values url.Values) (*ForumUserListResponse, error) {

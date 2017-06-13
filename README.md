@@ -23,9 +23,9 @@ https://disqus.com/api/docs/
 * details
 * interestingForums
 * listCategories
- listFollowers 
- listMostActiveUsers
- listMostLikedUsers
+* listFollowers 
+* listMostActiveUsers
+* listMostLikedUsers
 * listThreads
 * listUsers
 
