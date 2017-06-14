@@ -16,7 +16,8 @@ For this reason:
 The "related" parameter in many Disqus endpoints is not supported, since data returned through it can always be gotten with a direct call to the 
 respective api. In this sense, Gisqus covers the complete hierarchy of Disqus' object model.
 
-###Usage
+
+### Usage
 After having obtained an API key from Disqus (you must create an app for that on Disqus' control panel), one must obtain an instance of Gisqus:
 
 ```Go
@@ -62,12 +63,12 @@ const (
 )
 // Post constants are used by Disqus in API calls in the "include" parameter
 const (
-	PostUnapproved  = "unapproved"
-	PostApproved    = "approved"
-	PostSpam        = "spam"
-	PostDeleted     = "deleted"
-	PostFlagged     = "flagged"
-	PostHighlighted = "highlighted"
+	PostIsUnapproved  = "unapproved"
+	PostIsApproved    = "approved"
+	PostIsSpam        = "spam"
+	PostIsDeleted     = "deleted"
+	PostIsFlagged     = "flagged"
+	PostIsHighlighted = "highlighted"
 )
 // Intervals are used by Disqus in API calls in the "since" parameter
 const (
