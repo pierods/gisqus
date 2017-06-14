@@ -19,8 +19,6 @@ var testCtx context.Context
 var testValues url.Values
 var testDataDir string
 
-var mockUsersUrls UsersURLS
-
 func init() {
 	testGisqus = NewGisqus("secret")
 	testCtx, _ = context.WithCancel(context.TODO())
