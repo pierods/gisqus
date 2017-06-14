@@ -38,7 +38,7 @@ One can then proceed to make calls against Disqus' endpoints. Calls do not suppo
     if err != nil {
         ...
     }
-   fmt.Println(posts.Response[0].ID)
+    fmt.Println(posts.Response[0].ID)
 ```
 ### Notes
 All calls are cancellable, so they won't catastrophically block on a call chain.
@@ -67,7 +67,7 @@ const (
 	PostIsApproved    = "approved"
 	PostIsSpam        = "spam"
 	PostIsDeleted     = "deleted"
-	PostIsFlagged     = "flagged"
+	PostIncludedIsFlagged     = "flagged"
 	PostIsHighlighted = "highlighted"
 )
 // Intervals are used by Disqus in API calls in the "since" parameter
