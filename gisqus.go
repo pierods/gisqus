@@ -1,3 +1,6 @@
+// Copyright Piero de Salvia.
+// All Rights Reserved
+
 // Package gisqus is a thin wrapper over the Disqus API
 package gisqus
 
