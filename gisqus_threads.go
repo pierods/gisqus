@@ -31,7 +31,8 @@ var threadsUrls = ThreadsURLS{
 }
 
 /*
-complete users are not returned
+ThreadUsersVoted wraps https://disqus.com/api/docs/threads/listUsersVotedThread/ (https://disqus.com/api/3.0/threads/listUsersVotedThread.json)
+Complete users are not returned by Disqus on this call
 */
 func (gisqus *Gisqus) ThreadUsersVoted(ctx context.Context, thread string, values url.Values) (*UsersVotedResponse, error) {
 
@@ -44,7 +45,7 @@ func (gisqus *Gisqus) ThreadUsersVoted(ctx context.Context, thread string, value
 
 	var uvr UsersVotedResponse
 
-	err := gisqus.callAndInflate(url, &uvr, ctx)
+	err := gisqus.callAndInflate(ctx, url, &uvr)
 	if err != nil {
 		return nil, err
 	}
@@ -69,7 +70,7 @@ func (gisqus *Gisqus) ThreadList(ctx context.Context, values url.Values) (*Threa
 
 	var tlr ThreadListResponse
 
-	err := gisqus.callAndInflate(url, &tlr, ctx)
+	err := gisqus.callAndInflate(ctx, url, &tlr)
 	if err != nil {
 		return nil, err
 	}
@@ -94,7 +95,7 @@ func (gisqus *Gisqus) ThreadTrending(ctx context.Context, values url.Values) (*T
 
 	var tlr ThreadTrendingResponse
 
-	err := gisqus.callAndInflate(url, &tlr, ctx)
+	err := gisqus.callAndInflate(ctx, url, &tlr)
 	if err != nil {
 		return nil, err
 	}
@@ -120,6 +121,9 @@ func (gisqus *Gisqus) ThreadTrending(ctx context.Context, values url.Values) (*T
 
 }
 
+/*
+ThreadSet wraps https://disqus.com/api/docs/threads/set/ (https://disqus.com/api/3.0/threads/set.json)
+*/
 func (gisqus *Gisqus) ThreadSet(ctx context.Context, threads []string, values url.Values) (*ThreadListResponseNoCursor, error) {
 
 	if threads == nil || len(threads) == 0 {
@@ -133,7 +137,7 @@ func (gisqus *Gisqus) ThreadSet(ctx context.Context, threads []string, values ur
 
 	var tlr ThreadListResponseNoCursor
 
-	err := gisqus.callAndInflate(url, &tlr, ctx)
+	err := gisqus.callAndInflate(ctx, url, &tlr)
 	if err != nil {
 		return nil, err
 	}
@@ -161,7 +165,7 @@ func (gisqus *Gisqus) ThreadDetails(ctx context.Context, threadID string, values
 	url := threadsUrls.ThreadDetailURL + "?" + values.Encode()
 
 	var tdr ThreadDetailResponse
-	err := gisqus.callAndInflate(url, &tdr, ctx)
+	err := gisqus.callAndInflate(ctx, url, &tdr)
 	if err != nil {
 		return nil, err
 	}
@@ -189,7 +193,7 @@ func (gisqus *Gisqus) ThreadPosts(ctx context.Context, thread string, values url
 
 	var plr PostListResponse
 
-	err := gisqus.callAndInflate(url, &plr, ctx)
+	err := gisqus.callAndInflate(ctx, url, &plr)
 	if err != nil {
 		return nil, err
 	}
@@ -220,7 +224,7 @@ func (gisqus *Gisqus) ThreadHot(ctx context.Context, values url.Values) (*Thread
 
 	var tlr ThreadListResponseNoCursor
 
-	err := gisqus.callAndInflate(url, &tlr, ctx)
+	err := gisqus.callAndInflate(ctx, url, &tlr)
 	if err != nil {
 		return nil, err
 	}
@@ -244,7 +248,7 @@ func (gisqus *Gisqus) ThreadPopular(ctx context.Context, values url.Values) (*Th
 
 	var tlr ThreadListResponseNoCursor
 
-	err := gisqus.callAndInflate(url, &tlr, ctx)
+	err := gisqus.callAndInflate(ctx, url, &tlr)
 	if err != nil {
 		return nil, err
 	}
@@ -257,6 +261,7 @@ func (gisqus *Gisqus) ThreadPopular(ctx context.Context, values url.Values) (*Th
 	return &tlr, nil
 }
 
+// UsersVotedResponse models the response of the users voted thread endpoint
 type UsersVotedResponse struct {
 	ResponseStub
 	Response []*User `json:"response"`

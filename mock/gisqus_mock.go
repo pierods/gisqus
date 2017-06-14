@@ -7,10 +7,13 @@ import (
 	"net/url"
 )
 
+// JSONData is aliased to string, to signal intent of usage
 type JSONData string
+
+// MockedURL is aliased to string, to signal intent of usage
 type MockedURL string
 
-// MockServer makes it possible to redirect remote http calls to local calls
+// Server makes it possible to redirect remote http calls to local calls
 type Server struct {
 	baseDir          string
 	httpServer       *httptest.Server
@@ -38,10 +41,12 @@ func NewMockServer() *Server {
 	return &ms
 }
 
+// Close closes the underlying http test server
 func (ms *Server) Close() {
 	ms.httpServer.Close()
 }
 
+// SwitchHostAndScheme informs the Server of an url to mock, provides it with the mocking data and returns the mocked url
 func (ms *Server) SwitchHostAndScheme(sourceURL, data string) (string, error) {
 
 	newValues := ms.httpServer.URL

@@ -39,16 +39,21 @@ type activityResponseRaw struct {
 	Fragments []ActivityResponseFragment `json:"response"`
 }
 
+// ActivityResponseFragment is exported because of the json parser
 type ActivityResponseFragment struct {
 	FragmentType string          `json:"type"`
 	FragmentData json.RawMessage `json:"object"`
 }
 
+// RawPost is exported because of the json parser
 type RawPost struct {
 	postBase
 	Parent Post `json:"parent"`
 }
 
+/*
+UserActivities wraps https://disqus.com/api/docs/users/listActivity/ (https://disqus.com/api/3.0/users/listActivity.json)
+*/
 func (gisqus *Gisqus) UserActivities(ctx context.Context, userID string, values url.Values) (*ActivitiesListResponse, error) {
 	if userID == "" {
 		return nil, errors.New("Must provide a user id")
@@ -61,7 +66,7 @@ func (gisqus *Gisqus) UserActivities(ctx context.Context, userID string, values 
 
 	var arr activityResponseRaw
 
-	err := gisqus.callAndInflate(url, &arr, ctx)
+	err := gisqus.callAndInflate(ctx, url, &arr)
 	if err != nil {
 		return nil, err
 	}
@@ -108,6 +113,9 @@ func (gisqus *Gisqus) UserActivities(ctx context.Context, userID string, values 
 	return &alr, nil
 }
 
+/*
+UserMostActiveForums wraps https://disqus.com/api/docs/users/listMostActiveForums/ (https://disqus.com/api/3.0/users/listMostActiveForums.json)
+*/
 func (gisqus *Gisqus) UserMostActiveForums(ctx context.Context, userID string, values url.Values) (*MostActiveForumsResponse, error) {
 	if userID == "" {
 		return nil, errors.New("Must provide a user id")
@@ -118,7 +126,7 @@ func (gisqus *Gisqus) UserMostActiveForums(ctx context.Context, userID string, v
 
 	var mafr MostActiveForumsResponse
 
-	err := gisqus.callAndInflate(url, &mafr, ctx)
+	err := gisqus.callAndInflate(ctx, url, &mafr)
 	if err != nil {
 		return nil, err
 	}
@@ -147,7 +155,7 @@ func (gisqus *Gisqus) UserPosts(ctx context.Context, userID string, values url.V
 
 	var plr PostListResponse
 
-	err := gisqus.callAndInflate(url, &plr, ctx)
+	err := gisqus.callAndInflate(ctx, url, &plr)
 	if err != nil {
 		return nil, err
 	}
@@ -178,7 +186,7 @@ func (gisqus *Gisqus) UserDetails(ctx context.Context, userID string, values url
 	values.Set("api_secret", gisqus.secret)
 	url := usersUrls.userDetailURL + "?" + values.Encode()
 	var udr UserDetailsResponse
-	err := gisqus.callAndInflate(url, &udr, ctx)
+	err := gisqus.callAndInflate(ctx, url, &udr)
 	if err != nil {
 		return nil, err
 	}
@@ -199,7 +207,7 @@ func (gisqus *Gisqus) UserInteresting(ctx context.Context, values url.Values) (*
 	url := usersUrls.userInterestingIUsersURL + "?" + values.Encode()
 	var iur InterestingUsersResponse
 
-	err := gisqus.callAndInflate(url, &iur, ctx)
+	err := gisqus.callAndInflate(ctx, url, &iur)
 	if err != nil {
 		return nil, err
 	}
@@ -226,7 +234,7 @@ func (gisqus *Gisqus) UserActiveForums(ctx context.Context, user string, values 
 	url := usersUrls.userActiveForums + "?" + values.Encode()
 
 	var afr ActiveForumsResponse
-	err := gisqus.callAndInflate(url, &afr, ctx)
+	err := gisqus.callAndInflate(ctx, url, &afr)
 	if err != nil {
 		return nil, err
 	}
@@ -253,7 +261,7 @@ func (gisqus *Gisqus) UserFollowers(ctx context.Context, userID string, values u
 	url := usersUrls.userFollowers + "?" + values.Encode()
 	var fr UserListResponse
 
-	err := gisqus.callAndInflate(url, &fr, ctx)
+	err := gisqus.callAndInflate(ctx, url, &fr)
 	if err != nil {
 		return nil, err
 	}
@@ -280,7 +288,7 @@ func (gisqus *Gisqus) UserFollowing(ctx context.Context, userID string, values u
 	url := usersUrls.userFollowing + "?" + values.Encode()
 	var fr UserListResponse
 
-	err := gisqus.callAndInflate(url, &fr, ctx)
+	err := gisqus.callAndInflate(ctx, url, &fr)
 	if err != nil {
 		return nil, err
 	}
@@ -307,7 +315,7 @@ func (gisqus *Gisqus) UserForumFollowing(ctx context.Context, user string, value
 	url := usersUrls.userFollowingForums + "?" + values.Encode()
 
 	var uffr UserForumFollowingResponse
-	err := gisqus.callAndInflate(url, &uffr, ctx)
+	err := gisqus.callAndInflate(ctx, url, &uffr)
 	if err != nil {
 		return nil, err
 	}
@@ -321,11 +329,13 @@ func (gisqus *Gisqus) UserForumFollowing(ctx context.Context, user string, value
 	return &uffr, nil
 }
 
+// ActivitiesListResponse models the response of the user activity list endpoint
 type ActivitiesListResponse struct {
 	ResponseStubWithCursor
 	Posts []*Post `json:"response"`
 }
 
+// MostActiveForumsResponse models the responser of the user most active forums endpoint
 type MostActiveForumsResponse struct {
 	ResponseStub
 	Response []*Forum `json:"response"`

@@ -77,7 +77,7 @@ func TestForumMostActiveUsers(t *testing.T) {
 	mockServer = mock.NewMockServer()
 	defer mockServer.Close()
 
-	forumsUrls.ListFollowersURL, err = mockServer.SwitchHostAndScheme(forumsUrls.MostActiveUsersURL, forumMostActiveUsersJSON)
+	forumsUrls.MostActiveUsersURL, err = mockServer.SwitchHostAndScheme(forumsUrls.MostActiveUsersURL, forumMostActiveUsersJSON)
 	if err != nil {
 		t.Fatal(err)
 	}

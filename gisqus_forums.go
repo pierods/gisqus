@@ -30,6 +30,9 @@ var forumsUrls = ForumsURLS{
 	MostActiveUsersURL:   "https://disqus.com/api/3.0/forums/listMostActiveUsers.json",
 }
 
+/*
+ForumMostActiveUsers wraps https://disqus.com/api/docs/forums/listMostActiveUsers/ (https://disqus.com/api/3.0/forums/listMostActiveUsers.json)
+*/
 func (gisqus *Gisqus) ForumMostActiveUsers(ctx context.Context, forum string, values url.Values) (*ForumUserListResponse, error) {
 
 	if forum == "" {
@@ -37,10 +40,10 @@ func (gisqus *Gisqus) ForumMostActiveUsers(ctx context.Context, forum string, va
 	}
 	values.Set("api_secret", gisqus.secret)
 	values.Set("forum", forum)
-	url := forumsUrls.ListFollowersURL + "?" + values.Encode()
+	url := forumsUrls.MostActiveUsersURL + "?" + values.Encode()
 
 	var fulr ForumUserListResponse
-	err := gisqus.callAndInflate(url, &fulr, ctx)
+	err := gisqus.callAndInflate(ctx, url, &fulr)
 	if err != nil {
 		return nil, err
 	}
@@ -54,6 +57,9 @@ func (gisqus *Gisqus) ForumMostActiveUsers(ctx context.Context, forum string, va
 	return &fulr, nil
 }
 
+/*
+ForumFollowers wraps https://disqus.com/api/docs/forums/listFollowers/ (https://disqus.com/api/3.0/forums/listFollowers.json)
+*/
 func (gisqus *Gisqus) ForumFollowers(ctx context.Context, forum string, values url.Values) (*ForumUserListResponse, error) {
 
 	if forum == "" {
@@ -64,7 +70,7 @@ func (gisqus *Gisqus) ForumFollowers(ctx context.Context, forum string, values u
 	url := forumsUrls.ListFollowersURL + "?" + values.Encode()
 
 	var fulr ForumUserListResponse
-	err := gisqus.callAndInflate(url, &fulr, ctx)
+	err := gisqus.callAndInflate(ctx, url, &fulr)
 	if err != nil {
 		return nil, err
 	}
@@ -91,7 +97,7 @@ func (gisqus *Gisqus) ForumUsers(ctx context.Context, forum string, values url.V
 	url := forumsUrls.ListUsersURL + "?" + values.Encode()
 
 	var fulr ForumUserListResponse
-	err := gisqus.callAndInflate(url, &fulr, ctx)
+	err := gisqus.callAndInflate(ctx, url, &fulr)
 	if err != nil {
 		return nil, err
 	}
@@ -114,7 +120,7 @@ func (gisqus *Gisqus) ForumInteresting(ctx context.Context, values url.Values) (
 	url := forumsUrls.InterestingForumsURL + "?" + values.Encode()
 
 	var ifr InterestingForumsResponse
-	err := gisqus.callAndInflate(url, &ifr, ctx)
+	err := gisqus.callAndInflate(ctx, url, &ifr)
 	if err != nil {
 		return nil, err
 	}
@@ -143,7 +149,7 @@ func (gisqus *Gisqus) ForumDetails(ctx context.Context, forum string, values url
 
 	var fdr ForumDetailsResponse
 
-	err := gisqus.callAndInflate(url, &fdr, ctx)
+	err := gisqus.callAndInflate(ctx, url, &fdr)
 	if err != nil {
 		return nil, err
 	}
@@ -169,7 +175,7 @@ func (gisqus *Gisqus) ForumCategories(ctx context.Context, forum string, values 
 
 	var clr CategoriesListResponse
 
-	err := gisqus.callAndInflate(url, &clr, ctx)
+	err := gisqus.callAndInflate(ctx, url, &clr)
 	if err != nil {
 		return nil, err
 	}
@@ -190,7 +196,7 @@ func (gisqus *Gisqus) ForumThreads(ctx context.Context, forum string, values url
 
 	var tlr ThreadListResponse
 
-	err := gisqus.callAndInflate(url, &tlr, ctx)
+	err := gisqus.callAndInflate(ctx, url, &tlr)
 
 	for _, thread := range tlr.Response {
 		thread.CreatedAt, err = fromDisqusTime(thread.DisqusTimeCreatedAt)
@@ -218,7 +224,7 @@ func (gisqus *Gisqus) ForumMostLikedUsers(ctx context.Context, forum string, val
 	url := forumsUrls.MostLikedUsersURL + "?" + values.Encode()
 
 	var mlur MostLikedUsersResponse
-	err := gisqus.callAndInflate(url, &mlur, ctx)
+	err := gisqus.callAndInflate(ctx, url, &mlur)
 	if err != nil {
 		return nil, err
 	}

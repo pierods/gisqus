@@ -29,7 +29,7 @@ func fromDisqusTimeExact(dT string) (time.Time, error) {
 	return time.Parse(disqusDateFormatExact, dT)
 }
 
-func call(url string, ctx context.Context) (string, error) {
+func call(ctx context.Context, url string) (string, error) {
 
 	req, err := http.NewRequest("GET", url, nil)
 	if err != nil {
@@ -44,7 +44,7 @@ func call(url string, ctx context.Context) (string, error) {
 	defer resp.Body.Close()
 
 	if resp.StatusCode != 200 {
-		return "", fmt.Errorf("HTTP Response Error %d\n", resp.StatusCode)
+		return "", fmt.Errorf("HTTP Response Error %d", resp.StatusCode)
 	}
 
 	bytes, err := ioutil.ReadAll(resp.Body)
@@ -54,7 +54,7 @@ func call(url string, ctx context.Context) (string, error) {
 	return string(bytes), nil
 }
 
-func (g *Gisqus) callAndInflate(url string, v interface{}, ctx context.Context) error {
+func (g *Gisqus) callAndInflate(ctx context.Context, url string, v interface{}) error {
 
 	req, err := http.NewRequest("GET", url, nil)
 	if err != nil {
@@ -77,7 +77,7 @@ func (g *Gisqus) callAndInflate(url string, v interface{}, ctx context.Context) 
 	if resp.StatusCode != 200 {
 		disqusErrorBytes, _ := ioutil.ReadAll(resp.Body)
 		disqusError := string(disqusErrorBytes)
-		return fmt.Errorf("HTTP Response Error %s, code: %d, Message: %s \n", resp.Status, resp.StatusCode, disqusError)
+		return fmt.Errorf("http response error %s, code: %d, Message: %s``", resp.Status, resp.StatusCode, disqusError)
 	}
 
 	err = json.NewDecoder(resp.Body).Decode(v)

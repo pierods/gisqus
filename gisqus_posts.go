@@ -35,7 +35,7 @@ func (gisqus *Gisqus) PostDetails(ctx context.Context, postID string, values url
 
 	var pdr PostDetailsResponse
 
-	err := gisqus.callAndInflate(url, &pdr, ctx)
+	err := gisqus.callAndInflate(ctx, url, &pdr)
 	if err != nil {
 		return nil, err
 	}
@@ -60,7 +60,7 @@ func (gisqus *Gisqus) PostList(ctx context.Context, values url.Values) (*PostLis
 
 	var plr PostListResponse
 
-	err := gisqus.callAndInflate(url, &plr, ctx)
+	err := gisqus.callAndInflate(ctx, url, &plr)
 	if err != nil {
 		return nil, err
 	}
@@ -80,6 +80,9 @@ func (gisqus *Gisqus) PostList(ctx context.Context, values url.Values) (*PostLis
 	return &plr, nil
 }
 
+/*
+PostPopular wraps https://disqus.com/api/docs/posts/listPopular/ (https://disqus.com/api/3.0/posts/listPopular.json)
+*/
 func (gisqus *Gisqus) PostPopular(ctx context.Context, values url.Values) (*PostListResponseNoCursor, error) {
 
 	values.Set("api_secret", gisqus.secret)
@@ -87,7 +90,7 @@ func (gisqus *Gisqus) PostPopular(ctx context.Context, values url.Values) (*Post
 
 	var plr PostListResponseNoCursor
 
-	err := gisqus.callAndInflate(url, &plr, ctx)
+	err := gisqus.callAndInflate(ctx, url, &plr)
 	if err != nil {
 		return nil, err
 	}
@@ -107,6 +110,7 @@ func (gisqus *Gisqus) PostPopular(ctx context.Context, values url.Values) (*Post
 	return &plr, nil
 }
 
+// PostListResponseNoCursor wraps the response of the post popular endpoint
 type PostListResponseNoCursor struct {
 	ResponseStub
 	Response []*Post `json:"response"`
