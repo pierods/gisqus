@@ -13,8 +13,8 @@ import (
 	"time"
 )
 
-const disqusDateFormat = "2006-01-02T15:04:05"
-const disqusDateFormatExact = "2006-01-02T15:04:05.000000"
+const DisqusDateFormat = "2006-01-02T15:04:05"
+const DisqusDateFormatExact = "2006-01-02T15:04:05.000000"
 
 var zeroDate time.Time
 
@@ -22,14 +22,14 @@ func fromDisqusTime(dT string) (time.Time, error) {
 	if dT == "" {
 		return zeroDate, nil
 	}
-	return time.Parse(disqusDateFormat, dT)
+	return time.Parse(DisqusDateFormat, dT)
 }
 
 func fromDisqusTimeExact(dT string) (time.Time, error) {
 	if dT == "" {
 		return zeroDate, nil
 	}
-	return time.Parse(disqusDateFormatExact, dT)
+	return time.Parse(DisqusDateFormatExact, dT)
 }
 
 func call(ctx context.Context, url string) (string, error) {

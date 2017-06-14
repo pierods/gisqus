@@ -309,7 +309,7 @@ func TestUserActiveForums(t *testing.T) {
 	if len(forums.Response) != 25 {
 		t.Fatal("Should be able to correctly unmarshal items")
 	}
-	if forums.Response[0].CreatedAt.Format(disqusDateFormatExact) != "2008-04-09T23:30:16.843273" {
+	if forums.Response[0].CreatedAt.Format(DisqusDateFormatExact) != "2008-04-09T23:30:16.843273" {
 		t.Fatal("Should be able to correctly unmarshal items")
 	}
 	if forums.Response[0].Founder != "847" {
@@ -423,7 +423,7 @@ func TestUserForumFollowing(t *testing.T) {
 	if len(forums.Response) != 16 {
 		t.Fatal("Should be able to correctly unmarshal items")
 	}
-	if forums.Response[0].CreatedAt.Format(disqusDateFormatExact) != "2015-06-04T17:40:19.641774" {
+	if forums.Response[0].CreatedAt.Format(DisqusDateFormatExact) != "2015-06-04T17:40:19.641774" {
 		t.Fatal("Should be able to correctly unmarshal items")
 	}
 	if forums.Response[0].Founder != "172746617" {

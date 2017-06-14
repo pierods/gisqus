@@ -92,7 +92,7 @@ ToDisqusTime returns a string that can be used in Disqus call for timedate param
 */
 func ToDisqusTime(date time.Time) string {
 
-	return date.Format(disqusDateFormat)
+	return date.Format(DisqusDateFormat)
 }
 
 /*
@@ -100,7 +100,7 @@ ToDisqusTimeExact returns a string in the format of the ForumDetails CreatedAt f
 */
 func ToDisqusTimeExact(date time.Time) string {
 
-	return date.Format(disqusDateFormatExact)
+	return date.Format(DisqusDateFormatExact)
 }
 
 // ExtractForumID extracts the forum ID from the keys of the map returned by the interesting forum call

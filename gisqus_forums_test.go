@@ -226,7 +226,7 @@ func TestForumsInteresting(t *testing.T) {
 		t.Fatal("Should be able to correctly unmarshal items")
 	}
 
-	if interestingForums.Response.Objects["forums.Forum?id=770598"].CreatedAt.Format(disqusDateFormatExact) != "2011-04-21T18:47:32.503946" {
+	if interestingForums.Response.Objects["forums.Forum?id=770598"].CreatedAt.Format(DisqusDateFormatExact) != "2011-04-21T18:47:32.503946" {
 		t.Fatal("Should be able to correctly unmarshal items")
 	}
 	if !interestingForums.Response.Objects["forums.Forum?id=770598"].Settings.AllowAnonPost {
@@ -238,7 +238,6 @@ func TestForumsInteresting(t *testing.T) {
 	if interestingForums.Response.Objects["forums.Forum?id=770598"].Avatar.Small.Cache != "https://c.disquscdn.com/uploads/forums/77/598/avatar32.jpg?1435553857" {
 		t.Fatal("Should be able to correctly unmarshal items")
 	}
-
 }
 
 func TestForumDetails(t *testing.T) {
