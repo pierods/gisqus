@@ -19,6 +19,7 @@ type UsersURLS struct {
 	userFollowing            string
 	userFollowingForums      string
 	listActivityURL          string
+	mostActiveForumsURL      string
 }
 
 var usersUrls = UsersURLS{
@@ -30,6 +31,7 @@ var usersUrls = UsersURLS{
 	userFollowing:            "https://disqus.com/api/3.0/users/listFollowing.json",
 	userFollowingForums:      "https://disqus.com/api/3.0/users/listFollowingForums.json",
 	listActivityURL:          "https://disqus.com/api/3.0/users/listActivity.json",
+	mostActiveForumsURL:      "https://disqus.com/api/3.0/users/listMostActiveForums.json",
 }
 
 type activityResponseRaw struct {
@@ -104,6 +106,31 @@ func (gisqus *Gisqus) UserActivities(ctx context.Context, userID string, values 
 	}
 
 	return &alr, nil
+}
+
+func (gisqus *Gisqus) UserMostActiveForums(ctx context.Context, userID string, values url.Values) (*MostActiveForumsResponse, error) {
+	if userID == "" {
+		return nil, errors.New("Must provide a user id")
+	}
+	values.Set("api_secret", gisqus.secret)
+	values.Set("user", userID)
+	url := usersUrls.mostActiveForumsURL + "?" + values.Encode()
+
+	var mafr MostActiveForumsResponse
+
+	err := gisqus.callAndInflate(url, &mafr, ctx)
+	if err != nil {
+		return nil, err
+	}
+
+	for _, forum := range mafr.Response {
+		forum.CreatedAt, err = fromDisqusTimeExact(forum.DisqusTimeCreatedAt)
+		if err != nil {
+			return nil, err
+		}
+	}
+
+	return &mafr, nil
 }
 
 /*
@@ -297,6 +324,11 @@ func (gisqus *Gisqus) UserForumFollowing(ctx context.Context, user string, value
 type ActivitiesListResponse struct {
 	ResponseStubWithCursor
 	Posts []*Post `json:"response"`
+}
+
+type MostActiveForumsResponse struct {
+	ResponseStub
+	Response []*Forum `json:"response"`
 }
 
 //UserListResponse models the response of various user endpoints.

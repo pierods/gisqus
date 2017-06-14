@@ -16,6 +16,8 @@ For this reason:
 The "related" parameter in many Disqus endpoints is not supported, since data returned through it can always be gotten with a direct call to the 
 respective api. In this sense, Gisqus covers the complete hierarchy of Disqus' object model.
 
+###Usage
+
 ### Endpoints covered
 https://disqus.com/api/docs/
 ##### Forums
@@ -50,10 +52,6 @@ https://disqus.com/api/docs/
 * listActivity 
 * listFollowers 
 * listFollowing 
- listFollowingChannels 
 * listFollowingForums 
- listMostActiveForums 
+* listMostActiveForums 
 * listPosts
-
-
-###Usage

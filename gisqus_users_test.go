@@ -18,11 +18,17 @@ var (
 	usersFollowingJSON        string
 	usersForumFollowingJSON   string
 	usersActivitiesJSON       string
+	usersMostActiveForumsJSON string
 )
 
 func init() {
 
 	var err error
+	usersMostActiveForumsJSON, err = readFile("usersmostactiveforums.json")
+	if err != nil {
+		fmt.Println(err)
+		os.Exit(-1)
+	}
 	usersActivitiesJSON, err = readFile("userslistactivity.json")
 	if err != nil {
 		fmt.Println(err)
@@ -107,6 +113,40 @@ func TestUserPosts(t *testing.T) {
 	}
 	if posts.Response[0].Forum != "mapleleafshotstove" {
 		t.Fatal("Should be able to retrieve post forum")
+	}
+}
+
+func TestMostActiveForums(t *testing.T) {
+
+	mockServer = mock.NewMockServer()
+	defer mockServer.Close()
+
+	usersUrls.mostActiveForumsURL, err = mockServer.SwitchHostAndScheme(usersUrls.mostActiveForumsURL, usersMostActiveForumsJSON)
+	if err != nil {
+		t.Fatal(err)
+	}
+	testValues = url.Values{}
+	_, err = testGisqus.UserDetails(testCtx, "", testValues)
+	if err == nil {
+		t.Fatal("Should check for an empty user id")
+	}
+	forums, err := testGisqus.UserMostActiveForums(testCtx, "253940813", testValues)
+	if err != nil {
+		t.Fatal(err)
+	}
+	if ToDisqusTimeExact(forums.Response[0].CreatedAt) != "2011-06-02T18:50:59.765656" {
+		t.Fatal("Should be able to parse the created at field")
+	}
+	if forums.Response[0].Founder != "110449899" {
+		t.Fatal("Should be able to retrieve founder")
+	}
+
+	if forums.Response[0].OrganizationID != 110 {
+		t.Fatal("Should be able to retrieve an organization id")
+	}
+	if !forums.Response[0].Settings.OrganicDiscoveryEnabled {
+		t.Log(forums.Response[0].Settings.MustVerifyEmail)
+		t.Fatal("Should be able to retrieve organicDiscoveryEnabled")
 	}
 }
 

@@ -319,7 +319,7 @@ type ForumSettings struct {
 	AdsEnabled                       bool `json:"adsEnabled"`
 	AdsProductLinksThumbnailsEnabled bool `json:"adsProductLinksThumbnailsEnabled"`
 	AdsProductStoriesEnabled         bool `json:"adsProductStoriesEnabled"`
-	OrganicDiscoveryEnabled          bool `json:"organicProductDiscovery"`
+	OrganicDiscoveryEnabled          bool `json:"organicDiscoveryEnabled"`
 	AdsProductDisplayEnabled         bool `json:"adsProductDisplayEnabled"`
 	DiscoveryLocked                  bool `json:"discoveryLocked"`
 	HasCustomAvatar                  bool `json:"hasCustomAvatar"`
