@@ -5,8 +5,7 @@
 [![Go Report Card](https://goreportcard.com/badge/github.com/pierods/gisqus)](https://goreportcard.com/report/github.com/pierods/gisqus)
 [![Build Status](https://travis-ci.org/pierods/gisqus.svg?branch=master)](https://travis-ci.org/pierods/gisqus)
 
-Gisqus is a Go wrapper over Disqus' public API (https://disqus.com/api/docs/). Its main purposes are to wrap away REST calls, http error handling and modeling
-of the data returned.
+Gisqus is a Go wrapper over Disqus' public API (https://disqus.com/api/docs/). Its main purposes are to wrap away REST calls, http error handling and modeling of the data returned.
 
 Gisqus only covers endpoints that read data (GET method), not the ones writing data. It is mainly meant for reporting purposes.
 For this reason: 
@@ -42,13 +41,13 @@ https://disqus.com/api/docs/
 * details
 * getContext 
 * list
- listPopular
+* listPopular
 
 ##### Users
 * details 
 * interestingUsers
 * listActiveForums
- listActivity 
+* listActivity 
 * listFollowers 
 * listFollowing 
  listFollowingChannels 

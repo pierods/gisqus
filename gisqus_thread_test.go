@@ -69,7 +69,7 @@ func TestThreadUsersVoted(t *testing.T) {
 	mockServer = mock.NewMockServer()
 	defer mockServer.Close()
 
-	threadsUrls.ThreadUsersVoted, err = mockServer.SwitchHostAndScheme(threadsUrls.ThreadUsersVoted, threadUsersVotedJSON)
+	threadsUrls.ThreadUsersVotedURL, err = mockServer.SwitchHostAndScheme(threadsUrls.ThreadUsersVotedURL, threadUsersVotedJSON)
 	if err != nil {
 		t.Fatal(err)
 	}
@@ -106,7 +106,7 @@ func TestThreadSet(t *testing.T) {
 	mockServer = mock.NewMockServer()
 	defer mockServer.Close()
 
-	threadsUrls.ThreadSet, err = mockServer.SwitchHostAndScheme(threadsUrls.ThreadSet, threadSetJSON)
+	threadsUrls.ThreadSetURL, err = mockServer.SwitchHostAndScheme(threadsUrls.ThreadSetURL, threadSetJSON)
 	if err != nil {
 		t.Fatal(err)
 	}
@@ -155,7 +155,7 @@ func TestThreadList(t *testing.T) {
 	mockServer = mock.NewMockServer()
 	defer mockServer.Close()
 
-	threadsUrls.ThreadList, err = mockServer.SwitchHostAndScheme(threadsUrls.ThreadList, threadListJSON)
+	threadsUrls.ThreadListURL, err = mockServer.SwitchHostAndScheme(threadsUrls.ThreadListURL, threadListJSON)
 	if err != nil {
 		t.Fatal(err)
 	}
@@ -235,7 +235,7 @@ func TestThreadPosts(t *testing.T) {
 	mockServer = mock.NewMockServer()
 	defer mockServer.Close()
 
-	threadsUrls.ThreadPosts, err = mockServer.SwitchHostAndScheme(threadsUrls.ThreadPosts, threadPostsJSON)
+	threadsUrls.ThreadPostsURL, err = mockServer.SwitchHostAndScheme(threadsUrls.ThreadPostsURL, threadPostsJSON)
 	if err != nil {
 		t.Fatal(err)
 	}
@@ -281,7 +281,7 @@ func TestThreadListHot(t *testing.T) {
 	mockServer = mock.NewMockServer()
 	defer mockServer.Close()
 
-	threadsUrls.ThreadHot, err = mockServer.SwitchHostAndScheme(threadsUrls.ThreadHot, threadListHotJSON)
+	threadsUrls.ThreadHotURL, err = mockServer.SwitchHostAndScheme(threadsUrls.ThreadHotURL, threadListHotJSON)
 	if err != nil {
 		t.Fatal(err)
 	}
@@ -322,7 +322,7 @@ func TestThreadListPopular(t *testing.T) {
 	mockServer = mock.NewMockServer()
 	defer mockServer.Close()
 
-	threadsUrls.ThreadPopular, err = mockServer.SwitchHostAndScheme(threadsUrls.ThreadPopular, threadListPopularJSON)
+	threadsUrls.ThreadPopularURL, err = mockServer.SwitchHostAndScheme(threadsUrls.ThreadPopularURL, threadListPopularJSON)
 	if err != nil {
 		t.Fatal(err)
 	}
@@ -363,7 +363,7 @@ func TestThreadListTrending(t *testing.T) {
 	mockServer = mock.NewMockServer()
 	defer mockServer.Close()
 
-	threadsUrls.ThreadTrending, err = mockServer.SwitchHostAndScheme(threadsUrls.ThreadTrending, threadListTrendingJSON)
+	threadsUrls.ThreadTrendingURL, err = mockServer.SwitchHostAndScheme(threadsUrls.ThreadTrendingURL, threadListTrendingJSON)
 	if err != nil {
 		t.Fatal(err)
 	}

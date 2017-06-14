@@ -17,11 +17,17 @@ var (
 	usersFollowersJSON        string
 	usersFollowingJSON        string
 	usersForumFollowingJSON   string
+	usersActivitiesJSON       string
 )
 
 func init() {
 
 	var err error
+	usersActivitiesJSON, err = readFile("userslistactivity.json")
+	if err != nil {
+		fmt.Println(err)
+		os.Exit(-1)
+	}
 	usersListPostsJSON, err = readFile("userslistposts.json")
 	if err != nil {
 		fmt.Println(err)
@@ -101,6 +107,50 @@ func TestUserPosts(t *testing.T) {
 	}
 	if posts.Response[0].Forum != "mapleleafshotstove" {
 		t.Fatal("Should be able to retrieve post forum")
+	}
+}
+
+func TestUserActivities(t *testing.T) {
+
+	mockServer = mock.NewMockServer()
+	defer mockServer.Close()
+
+	usersUrls.listActivityURL, err = mockServer.SwitchHostAndScheme(usersUrls.listActivityURL, usersActivitiesJSON)
+	if err != nil {
+		t.Fatal(err)
+	}
+	testValues = url.Values{}
+	_, err = testGisqus.UserDetails(testCtx, "", testValues)
+	if err == nil {
+		t.Fatal("Should check for an empty user id")
+	}
+	activities, err := testGisqus.UserActivities(testCtx, "79849", testValues)
+	if err != nil {
+		t.Fatal(err)
+	}
+	if len(activities.Posts) != 25 {
+		t.Fatal("Should be able to retrieve all posts")
+	}
+	if activities.Posts[0].ID != "3357202237" {
+		t.Fatal("Should be able to retrieve a post id")
+	}
+	if activities.Posts[0].Author.Username != "coachbuzzcut" {
+		t.Fatal("Should be able to retrieve a post's author's username")
+	}
+	if activities.Posts[0].Author.ID != "253940813" {
+		t.Fatal("Should be able to retrieve a post's username's id")
+	}
+	if ToDisqusTime(activities.Posts[0].CreatedAt) != "2017-06-13T10:20:29" {
+		t.Fatal("Should be able to retrieve a post's created at")
+	}
+	if activities.Posts[0].Parent != 3356547778 {
+		t.Fatal("Should be able to retrieve a post's parent")
+	}
+	if activities.Posts[0].Thread != "5903840168" {
+		t.Fatal("Should be able to retrieve a post's thread")
+	}
+	if activities.Posts[0].Forum != "tmz" {
+		t.Fatal("Should be able to retrieve a post's forum")
 	}
 }
 

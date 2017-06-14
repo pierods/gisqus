@@ -9,13 +9,15 @@ import (
 
 // PostsURLS are the URLS of the Post endpoints in Disqus' API
 type PostsURLS struct {
-	postDetailsURL string
-	postListURL    string
+	PostDetailsURL string
+	PostListURL    string
+	PostPopularURL string
 }
 
 var postsUrls = PostsURLS{
-	postDetailsURL: "https://disqus.com/api/3.0/posts/details.json",
-	postListURL:    "https://disqus.com/api/3.0/posts/list.json",
+	PostDetailsURL: "https://disqus.com/api/3.0/posts/details.json",
+	PostListURL:    "https://disqus.com/api/3.0/posts/list.json",
+	PostPopularURL: "https://disqus.com/api/3.0/posts/listPopular.json",
 }
 
 /*
@@ -29,7 +31,7 @@ func (gisqus *Gisqus) PostDetails(ctx context.Context, postID string, values url
 	}
 	values.Set("post", postID)
 	values.Set("api_secret", gisqus.secret)
-	url := postsUrls.postDetailsURL + "?" + values.Encode()
+	url := postsUrls.PostDetailsURL + "?" + values.Encode()
 
 	var pdr PostDetailsResponse
 
@@ -54,7 +56,7 @@ PostList wraps https://disqus.com/api/docs/posts/list/ (https://disqus.com/api/3
 func (gisqus *Gisqus) PostList(ctx context.Context, values url.Values) (*PostListResponse, error) {
 
 	values.Set("api_secret", gisqus.secret)
-	url := postsUrls.postListURL + "?" + values.Encode()
+	url := postsUrls.PostListURL + "?" + values.Encode()
 
 	var plr PostListResponse
 
@@ -78,6 +80,38 @@ func (gisqus *Gisqus) PostList(ctx context.Context, values url.Values) (*PostLis
 	return &plr, nil
 }
 
+func (gisqus *Gisqus) PostPopular(ctx context.Context, values url.Values) (*PostListResponseNoCursor, error) {
+
+	values.Set("api_secret", gisqus.secret)
+	url := postsUrls.PostPopularURL + "?" + values.Encode()
+
+	var plr PostListResponseNoCursor
+
+	err := gisqus.callAndInflate(url, &plr, ctx)
+	if err != nil {
+		return nil, err
+	}
+
+	for _, post := range plr.Response {
+		post.CreatedAt, err = fromDisqusTime(post.DisqusTimeCreatedAt)
+		if err != nil {
+			return nil, err
+		}
+		post.Author.JoinedAt, err = fromDisqusTime(post.Author.DisqusTimeJoinedAt)
+
+		if err != nil {
+			return nil, err
+		}
+	}
+
+	return &plr, nil
+}
+
+type PostListResponseNoCursor struct {
+	ResponseStub
+	Response []*Post `json:"response"`
+}
+
 // PostListResponse wraps the response of the post list endpoint
 type PostListResponse struct {
 	ResponseStubWithCursor
@@ -90,8 +124,7 @@ type PostDetailsResponse struct {
 	Response *Post `json:"response"`
 }
 
-// Post models a Post as returned by Disqus' API
-type Post struct {
+type postBase struct {
 	Dislikes            int          `json:"dislikes"`
 	NumReports          int          `json:"numReports"`
 	Likes               int          `json:"likes"`
@@ -104,7 +137,6 @@ type Post struct {
 	IsDeletedByAuthor   bool         `json:"isDeletedByAuthor"`
 	CreatedAt           time.Time    `json:"-"`
 	DisqusTimeCreatedAt string       `json:"createdAt"`
-	Parent              int          `json:"parent"`
 	IsApproved          bool         `json:"isApproved"`
 	IsFlagged           bool         `json:"isFlagged"`
 	RawMessage          string       `json:"rawMessage"`
@@ -116,6 +148,12 @@ type Post struct {
 	ModerationLabels    []string     `json:"moderationLabels"`
 	IsEdited            bool         `json:"isEdited"`
 	Sb                  bool         `json:"sb"`
+}
+
+// Post models a Post as returned by Disqus' API
+type Post struct {
+	postBase
+	Parent int `json:"parent"`
 }
 
 // PostMedia models the fields the media field in a Post

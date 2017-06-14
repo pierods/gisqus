@@ -2,8 +2,10 @@ package gisqus
 
 import (
 	"context"
+	"encoding/json"
 	"errors"
 	"net/url"
+	"strconv"
 	"time"
 )
 
@@ -16,10 +18,8 @@ type UsersURLS struct {
 	userFollowers            string
 	userFollowing            string
 	userFollowingForums      string
+	listActivityURL          string
 }
-
-// following forums
-// curl "https://disqus.com/api/3.0/users/listFollowingForums.json?user=195792235&api_secret=KpVAypnhCxG27eRLRbXad0i1xfbyUsHPE7E8on5wbFJkbQcIzjB0pkJ4kMOfTRmx" |jq
 
 var usersUrls = UsersURLS{
 	userDetailURL:            "https://disqus.com/api/3.0/users/details.json",
@@ -29,6 +29,81 @@ var usersUrls = UsersURLS{
 	userFollowers:            "https://disqus.com/api/3.0/users/listFollowers.json",
 	userFollowing:            "https://disqus.com/api/3.0/users/listFollowing.json",
 	userFollowingForums:      "https://disqus.com/api/3.0/users/listFollowingForums.json",
+	listActivityURL:          "https://disqus.com/api/3.0/users/listActivity.json",
+}
+
+type activityResponseRaw struct {
+	ResponseStubWithCursor
+	Fragments []ActivityResponseFragment `json:"response"`
+}
+
+type ActivityResponseFragment struct {
+	FragmentType string          `json:"type"`
+	FragmentData json.RawMessage `json:"object"`
+}
+
+type RawPost struct {
+	postBase
+	Parent Post `json:"parent"`
+}
+
+func (gisqus *Gisqus) UserActivities(ctx context.Context, userID string, values url.Values) (*ActivitiesListResponse, error) {
+	if userID == "" {
+		return nil, errors.New("Must provide a user id")
+	}
+	values.Set("api_secret", gisqus.secret)
+	values.Set("user", userID)
+	values.Set("related", "")
+
+	url := usersUrls.listActivityURL + "?" + values.Encode()
+
+	var arr activityResponseRaw
+
+	err := gisqus.callAndInflate(url, &arr, ctx)
+	if err != nil {
+		return nil, err
+	}
+	alr := ActivitiesListResponse{}
+	alr.ResponseStubWithCursor = arr.ResponseStubWithCursor
+
+	for _, fragment := range arr.Fragments {
+		switch fragment.FragmentType {
+		case "reply":
+			fallthrough
+		case "post":
+			var rawPost RawPost
+			err := json.Unmarshal(fragment.FragmentData, &rawPost)
+			if err != nil {
+				return nil, err
+			}
+			var post Post
+			postIDInt, err := strconv.Atoi(rawPost.Parent.ID)
+			if err != nil {
+				return nil, err
+			}
+			post = Post{
+				rawPost.postBase,
+				postIDInt,
+			}
+			alr.Posts = append(alr.Posts, &post)
+		default:
+			return nil, errors.New(fragment.FragmentType)
+		}
+	}
+
+	for _, post := range alr.Posts {
+		post.CreatedAt, err = fromDisqusTime(post.DisqusTimeCreatedAt)
+		if err != nil {
+			return nil, err
+		}
+		post.Author.JoinedAt, err = fromDisqusTime(post.Author.DisqusTimeJoinedAt)
+
+		if err != nil {
+			return nil, err
+		}
+	}
+
+	return &alr, nil
 }
 
 /*
@@ -217,6 +292,11 @@ func (gisqus *Gisqus) UserForumFollowing(ctx context.Context, user string, value
 		}
 	}
 	return &uffr, nil
+}
+
+type ActivitiesListResponse struct {
+	ResponseStubWithCursor
+	Posts []*Post `json:"response"`
 }
 
 //UserListResponse models the response of various user endpoints.

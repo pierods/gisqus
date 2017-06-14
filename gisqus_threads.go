@@ -9,25 +9,25 @@ import (
 
 // ThreadsURLS are the URLs of the thread endpoints of the Disqus' API
 type ThreadsURLS struct {
-	ThreadList       string
-	ThreadDetailURL  string
-	ThreadPosts      string
-	ThreadHot        string
-	ThreadPopular    string
-	ThreadTrending   string
-	ThreadUsersVoted string
-	ThreadSet        string
+	ThreadListURL       string
+	ThreadDetailURL     string
+	ThreadPostsURL      string
+	ThreadHotURL        string
+	ThreadPopularURL    string
+	ThreadTrendingURL   string
+	ThreadUsersVotedURL string
+	ThreadSetURL        string
 }
 
 var threadsUrls = ThreadsURLS{
-	ThreadList:       "https://disqus.com/api/3.0/threads/list.json",
-	ThreadDetailURL:  "https://disqus.com/api/3.0/threads/details.json",
-	ThreadPosts:      "https://disqus.com/api/3.0/threads/listPosts.json",
-	ThreadHot:        "https://disqus.com/api/3.0/threads/listHot.json",
-	ThreadPopular:    "https://disqus.com/api/3.0/threads/listPopular.json",
-	ThreadTrending:   "https://disqus.com/api/3.0/trends/listThreads.json",
-	ThreadUsersVoted: "https://disqus.com/api/3.0/threads/listUsersVotedThread.json",
-	ThreadSet:        "https://disqus.com/api/3.0/threads/set.json",
+	ThreadListURL:       "https://disqus.com/api/3.0/threads/list.json",
+	ThreadDetailURL:     "https://disqus.com/api/3.0/threads/details.json",
+	ThreadPostsURL:      "https://disqus.com/api/3.0/threads/listPosts.json",
+	ThreadHotURL:        "https://disqus.com/api/3.0/threads/listHot.json",
+	ThreadPopularURL:    "https://disqus.com/api/3.0/threads/listPopular.json",
+	ThreadTrendingURL:   "https://disqus.com/api/3.0/trends/listThreads.json",
+	ThreadUsersVotedURL: "https://disqus.com/api/3.0/threads/listUsersVotedThread.json",
+	ThreadSetURL:        "https://disqus.com/api/3.0/threads/set.json",
 }
 
 /*
@@ -40,7 +40,7 @@ func (gisqus *Gisqus) ThreadUsersVoted(ctx context.Context, thread string, value
 	}
 	values.Set("thread", thread)
 	values.Set("api_secret", gisqus.secret)
-	url := threadsUrls.ThreadUsersVoted + "?" + values.Encode()
+	url := threadsUrls.ThreadUsersVotedURL + "?" + values.Encode()
 
 	var uvr UsersVotedResponse
 
@@ -65,7 +65,7 @@ It does not support the "related" argument (related fields can be gotten with ca
 func (gisqus *Gisqus) ThreadList(ctx context.Context, values url.Values) (*ThreadListResponse, error) {
 
 	values.Set("api_secret", gisqus.secret)
-	url := threadsUrls.ThreadList + "?" + values.Encode()
+	url := threadsUrls.ThreadListURL + "?" + values.Encode()
 
 	var tlr ThreadListResponse
 
@@ -90,7 +90,7 @@ It does not support the "related" argument (related fields can be gotten with ca
 func (gisqus *Gisqus) ThreadTrending(ctx context.Context, values url.Values) (*ThreadTrendingResponse, error) {
 
 	values.Set("api_secret", gisqus.secret)
-	url := threadsUrls.ThreadTrending + "?" + values.Encode()
+	url := threadsUrls.ThreadTrendingURL + "?" + values.Encode()
 
 	var tlr ThreadTrendingResponse
 
@@ -129,7 +129,7 @@ func (gisqus *Gisqus) ThreadSet(ctx context.Context, threads []string, values ur
 		values.Add("thread", thread)
 	}
 	values.Set("api_secret", gisqus.secret)
-	url := threadsUrls.ThreadSet + "?" + values.Encode()
+	url := threadsUrls.ThreadSetURL + "?" + values.Encode()
 
 	var tlr ThreadListResponseNoCursor
 
@@ -185,7 +185,7 @@ func (gisqus *Gisqus) ThreadPosts(ctx context.Context, thread string, values url
 	}
 	values.Set("thread", thread)
 	values.Set("api_secret", gisqus.secret)
-	url := threadsUrls.ThreadPosts + "?" + values.Encode()
+	url := threadsUrls.ThreadPostsURL + "?" + values.Encode()
 
 	var plr PostListResponse
 
@@ -216,7 +216,7 @@ It does not support the "related" argument (related fields can be gotten with ca
 func (gisqus *Gisqus) ThreadHot(ctx context.Context, values url.Values) (*ThreadListResponseNoCursor, error) {
 
 	values.Set("api_secret", gisqus.secret)
-	url := threadsUrls.ThreadHot + "?" + values.Encode()
+	url := threadsUrls.ThreadHotURL + "?" + values.Encode()
 
 	var tlr ThreadListResponseNoCursor
 
@@ -240,7 +240,7 @@ It does not support the "related" argument (related fields can be gotten with ca
 func (gisqus *Gisqus) ThreadPopular(ctx context.Context, values url.Values) (*ThreadListResponseNoCursor, error) {
 
 	values.Set("api_secret", gisqus.secret)
-	url := threadsUrls.ThreadPopular + "?" + values.Encode()
+	url := threadsUrls.ThreadPopularURL + "?" + values.Encode()
 
 	var tlr ThreadListResponseNoCursor
 

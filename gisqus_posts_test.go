@@ -12,11 +12,17 @@ import (
 var (
 	postDetailsJSON string
 	postListJSON    string
+	postPopularJSON string
 )
 
 func init() {
 
 	var err error
+	postPopularJSON, err = readFile("postspostpopular.json")
+	if err != nil {
+		fmt.Println(err)
+		os.Exit(-1)
+	}
 	postDetailsJSON, err = readFile("postspostdetails.json")
 	if err != nil {
 		fmt.Println(err)
@@ -34,7 +40,7 @@ func TestPostDetails(t *testing.T) {
 	defer mockServer.Close()
 	testValues = url.Values{}
 
-	postsUrls.postDetailsURL, err = mockServer.SwitchHostAndScheme(postsUrls.postDetailsURL, postDetailsJSON)
+	postsUrls.PostDetailsURL, err = mockServer.SwitchHostAndScheme(postsUrls.PostDetailsURL, postDetailsJSON)
 	if err != nil {
 		t.Fatal(err)
 	}
@@ -74,7 +80,7 @@ func TestPostList(t *testing.T) {
 	mockServer = mock.NewMockServer()
 	defer mockServer.Close()
 
-	postsUrls.postListURL, err = mockServer.SwitchHostAndScheme(postsUrls.postListURL, postListJSON)
+	postsUrls.PostListURL, err = mockServer.SwitchHostAndScheme(postsUrls.PostListURL, postListJSON)
 	if err != nil {
 		t.Fatal(err)
 	}
@@ -107,6 +113,46 @@ func TestPostList(t *testing.T) {
 		t.Fatal("Should be able to retrieve a post's thread")
 	}
 	if posts.Response[0].Forum != "pregunta2" {
+		t.Fatal("Should be able to retrieve a post's forum")
+	}
+
+}
+
+func TestPostPopular(t *testing.T) {
+
+	mockServer = mock.NewMockServer()
+	defer mockServer.Close()
+
+	postsUrls.PostPopularURL, err = mockServer.SwitchHostAndScheme(postsUrls.PostPopularURL, postPopularJSON)
+	if err != nil {
+		t.Fatal(err)
+	}
+
+	values := url.Values{}
+
+	posts, err := testGisqus.PostPopular(testCtx, values)
+	if err != nil {
+		t.Fatal("Should be able to call the post popular endpoint - ", err)
+	}
+	if len(posts.Response) != 25 {
+		t.Fatal("Should be able to correctly parse a post list")
+	}
+	if posts.Response[0].ID != "3357275751" {
+		t.Fatal("Should be able to retrieve a post id")
+	}
+	if posts.Response[0].Author.Username != "mychive-3683e7511cad5234db651099216183d0" {
+		t.Fatal("Should be able to retrieve a post's author's username")
+	}
+	if posts.Response[0].Author.ID != "252976252" {
+		t.Fatal("Should be able to retrieve a post's user's id")
+	}
+	if ToDisqusTime(posts.Response[0].CreatedAt) != "2017-06-13T11:40:12" {
+		t.Fatal("Should be able to retrieve a post's created at")
+	}
+	if posts.Response[0].Thread != "5906159869" {
+		t.Fatal("Should be able to retrieve a post's thread")
+	}
+	if posts.Response[0].Forum != "thechiverules" {
 		t.Fatal("Should be able to retrieve a post's forum")
 	}
 
