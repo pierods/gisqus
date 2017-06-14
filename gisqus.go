@@ -160,12 +160,12 @@ const (
 
 // Post constants are used by Disqus in API calls in the "include" parameter
 const (
-	PostUnapproved  = "unapproved"
-	PostApproved    = "approved"
-	PostSpam        = "spam"
-	PostDeleted     = "deleted"
-	PostFlagged     = "flagged"
-	PostHighlighted = "highlighted"
+	PostIsUnapproved  = "unapproved"
+	PostIsApproved    = "approved"
+	PostIsSpam        = "spam"
+	PostIsDeleted     = "deleted"
+	PostIsFlagged     = "flagged"
+	PostIsHighlighted = "highlighted"
 )
 
 // Intervals are used by Disqus in API calls in the "since" parameter
