@@ -21,17 +21,17 @@ var (
 func init() {
 
 	var err error
-	postPopularJSON, err = readFile("postspostpopular.json")
+	postPopularJSON, err = readTestFile("postspostpopular.json")
 	if err != nil {
 		fmt.Println(err)
 		os.Exit(-1)
 	}
-	postDetailsJSON, err = readFile("postspostdetails.json")
+	postDetailsJSON, err = readTestFile("postspostdetails.json")
 	if err != nil {
 		fmt.Println(err)
 		os.Exit(-1)
 	}
-	postListJSON, err = readFile("postspostlist.json")
+	postListJSON, err = readTestFile("postspostlist.json")
 	if err != nil {
 		fmt.Println(err)
 		os.Exit(-1)
@@ -43,12 +43,12 @@ func TestPostDetails(t *testing.T) {
 	defer mockServer.Close()
 	testValues = url.Values{}
 
-	postsUrls.PostDetailsURL, err = mockServer.SwitchHostAndScheme(postsUrls.PostDetailsURL, postDetailsJSON)
-	if err != nil {
-		t.Fatal(err)
+	postsUrls.PostDetailsURL, testErr = mockServer.SwitchHostAndScheme(postsUrls.PostDetailsURL, postDetailsJSON)
+	if testErr != nil {
+		t.Fatal(testErr)
 	}
-	_, err = testGisqus.PostDetails(testCtx, "", testValues)
-	if err == nil {
+	_, testErr = testGisqus.PostDetails(testCtx, "", testValues)
+	if testErr == nil {
 		t.Fatal("Should check for an empty post id")
 	}
 	details, err := testGisqus.PostDetails(testCtx, "3320987826", testValues)
@@ -83,9 +83,9 @@ func TestPostList(t *testing.T) {
 	mockServer = mock.NewMockServer()
 	defer mockServer.Close()
 
-	postsUrls.PostListURL, err = mockServer.SwitchHostAndScheme(postsUrls.PostListURL, postListJSON)
-	if err != nil {
-		t.Fatal(err)
+	postsUrls.PostListURL, testErr = mockServer.SwitchHostAndScheme(postsUrls.PostListURL, postListJSON)
+	if testErr != nil {
+		t.Fatal(testErr)
 	}
 
 	values := url.Values{}
@@ -126,9 +126,9 @@ func TestPostPopular(t *testing.T) {
 	mockServer = mock.NewMockServer()
 	defer mockServer.Close()
 
-	postsUrls.PostPopularURL, err = mockServer.SwitchHostAndScheme(postsUrls.PostPopularURL, postPopularJSON)
-	if err != nil {
-		t.Fatal(err)
+	postsUrls.PostPopularURL, testErr = mockServer.SwitchHostAndScheme(postsUrls.PostPopularURL, postPopularJSON)
+	if testErr != nil {
+		t.Fatal(testErr)
 	}
 
 	values := url.Values{}

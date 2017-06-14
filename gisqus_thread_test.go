@@ -26,42 +26,42 @@ var (
 func init() {
 
 	var err error
-	threadSetJSON, err = readFile("threadsset.json")
+	threadSetJSON, err = readTestFile("threadsset.json")
 	if err != nil {
 		fmt.Println(err)
 		os.Exit(-1)
 	}
-	threadUsersVotedJSON, err = readFile("threadsusersvoted.json")
+	threadUsersVotedJSON, err = readTestFile("threadsusersvoted.json")
 	if err != nil {
 		fmt.Println(err)
 		os.Exit(-1)
 	}
-	threadListJSON, err = readFile("threadsthreadlist.json")
+	threadListJSON, err = readTestFile("threadsthreadlist.json")
 	if err != nil {
 		fmt.Println(err)
 		os.Exit(-1)
 	}
-	threadDetailsJSON, err = readFile("threadsthreaddetails.json")
+	threadDetailsJSON, err = readTestFile("threadsthreaddetails.json")
 	if err != nil {
 		fmt.Println(err)
 		os.Exit(-1)
 	}
-	threadPostsJSON, err = readFile("threadsthreadposts.json")
+	threadPostsJSON, err = readTestFile("threadsthreadposts.json")
 	if err != nil {
 		fmt.Println(err)
 		os.Exit(-1)
 	}
-	threadListHotJSON, err = readFile("threadshotlist.json")
+	threadListHotJSON, err = readTestFile("threadshotlist.json")
 	if err != nil {
 		fmt.Println(err)
 		os.Exit(-1)
 	}
-	threadListPopularJSON, err = readFile("threadspopular.json")
+	threadListPopularJSON, err = readTestFile("threadspopular.json")
 	if err != nil {
 		fmt.Println(err)
 		os.Exit(-1)
 	}
-	threadListTrendingJSON, err = readFile("threadstrending.json")
+	threadListTrendingJSON, err = readTestFile("threadstrending.json")
 	if err != nil {
 		fmt.Println(err)
 		os.Exit(-1)
@@ -72,14 +72,14 @@ func TestThreadUsersVoted(t *testing.T) {
 	mockServer = mock.NewMockServer()
 	defer mockServer.Close()
 
-	threadsUrls.ThreadUsersVotedURL, err = mockServer.SwitchHostAndScheme(threadsUrls.ThreadUsersVotedURL, threadUsersVotedJSON)
-	if err != nil {
-		t.Fatal(err)
+	threadsUrls.ThreadUsersVotedURL, testErr = mockServer.SwitchHostAndScheme(threadsUrls.ThreadUsersVotedURL, threadUsersVotedJSON)
+	if testErr != nil {
+		t.Fatal(testErr)
 	}
 	testValues = url.Values{}
 
-	_, err = testGisqus.ThreadDetails(testCtx, "", testValues)
-	if err == nil {
+	_, testErr = testGisqus.ThreadDetails(testCtx, "", testValues)
+	if testErr == nil {
 		t.Fatal("Should check for an empty thread id")
 	}
 	users, err := testGisqus.ThreadUsersVoted(testCtx, "5846923796", testValues)
@@ -109,18 +109,18 @@ func TestThreadSet(t *testing.T) {
 	mockServer = mock.NewMockServer()
 	defer mockServer.Close()
 
-	threadsUrls.ThreadSetURL, err = mockServer.SwitchHostAndScheme(threadsUrls.ThreadSetURL, threadSetJSON)
-	if err != nil {
-		t.Fatal(err)
+	threadsUrls.ThreadSetURL, testErr = mockServer.SwitchHostAndScheme(threadsUrls.ThreadSetURL, threadSetJSON)
+	if testErr != nil {
+		t.Fatal(testErr)
 	}
 	testValues = url.Values{}
 
-	_, err = testGisqus.ThreadSet(testCtx, []string{}, testValues)
-	if err == nil {
+	_, testErr = testGisqus.ThreadSet(testCtx, []string{}, testValues)
+	if testErr == nil {
 		t.Fatal("Should check for an empty thread id")
 	}
-	_, err = testGisqus.ThreadSet(testCtx, nil, testValues)
-	if err == nil {
+	_, testErr = testGisqus.ThreadSet(testCtx, nil, testValues)
+	if testErr == nil {
 		t.Fatal("Should check for an empty thread id")
 	}
 	threads, err := testGisqus.ThreadSet(testCtx, []string{"5903840168", "5850192558"}, testValues)
@@ -158,9 +158,9 @@ func TestThreadList(t *testing.T) {
 	mockServer = mock.NewMockServer()
 	defer mockServer.Close()
 
-	threadsUrls.ThreadListURL, err = mockServer.SwitchHostAndScheme(threadsUrls.ThreadListURL, threadListJSON)
-	if err != nil {
-		t.Fatal(err)
+	threadsUrls.ThreadListURL, testErr = mockServer.SwitchHostAndScheme(threadsUrls.ThreadListURL, threadListJSON)
+	if testErr != nil {
+		t.Fatal(testErr)
 	}
 
 	testValues = url.Values{}
@@ -199,14 +199,14 @@ func TestThreadDetails(t *testing.T) {
 	mockServer = mock.NewMockServer()
 	defer mockServer.Close()
 
-	threadsUrls.ThreadDetailURL, err = mockServer.SwitchHostAndScheme(threadsUrls.ThreadDetailURL, threadDetailsJSON)
-	if err != nil {
-		t.Fatal(err)
+	threadsUrls.ThreadDetailURL, testErr = mockServer.SwitchHostAndScheme(threadsUrls.ThreadDetailURL, threadDetailsJSON)
+	if testErr != nil {
+		t.Fatal(testErr)
 	}
 	testValues = url.Values{}
 
-	_, err = testGisqus.ThreadDetails(testCtx, "", testValues)
-	if err == nil {
+	_, testErr = testGisqus.ThreadDetails(testCtx, "", testValues)
+	if testErr == nil {
 		t.Fatal("Should check for an empty thread id")
 	}
 	details, err := testGisqus.ThreadDetails(testCtx, "5846923796", testValues)
@@ -238,14 +238,14 @@ func TestThreadPosts(t *testing.T) {
 	mockServer = mock.NewMockServer()
 	defer mockServer.Close()
 
-	threadsUrls.ThreadPostsURL, err = mockServer.SwitchHostAndScheme(threadsUrls.ThreadPostsURL, threadPostsJSON)
-	if err != nil {
-		t.Fatal(err)
+	threadsUrls.ThreadPostsURL, testErr = mockServer.SwitchHostAndScheme(threadsUrls.ThreadPostsURL, threadPostsJSON)
+	if testErr != nil {
+		t.Fatal(testErr)
 	}
 
 	testValues = url.Values{}
-	_, err = testGisqus.ThreadPosts(testCtx, "", testValues)
-	if err == nil {
+	_, testErr = testGisqus.ThreadPosts(testCtx, "", testValues)
+	if testErr == nil {
 		t.Fatal("Should check for empty thread id")
 	}
 	posts, err := testGisqus.ThreadPosts(testCtx, "5846923796", testValues)
@@ -284,9 +284,9 @@ func TestThreadListHot(t *testing.T) {
 	mockServer = mock.NewMockServer()
 	defer mockServer.Close()
 
-	threadsUrls.ThreadHotURL, err = mockServer.SwitchHostAndScheme(threadsUrls.ThreadHotURL, threadListHotJSON)
-	if err != nil {
-		t.Fatal(err)
+	threadsUrls.ThreadHotURL, testErr = mockServer.SwitchHostAndScheme(threadsUrls.ThreadHotURL, threadListHotJSON)
+	if testErr != nil {
+		t.Fatal(testErr)
 	}
 
 	testValues = url.Values{}
@@ -325,9 +325,9 @@ func TestThreadListPopular(t *testing.T) {
 	mockServer = mock.NewMockServer()
 	defer mockServer.Close()
 
-	threadsUrls.ThreadPopularURL, err = mockServer.SwitchHostAndScheme(threadsUrls.ThreadPopularURL, threadListPopularJSON)
-	if err != nil {
-		t.Fatal(err)
+	threadsUrls.ThreadPopularURL, testErr = mockServer.SwitchHostAndScheme(threadsUrls.ThreadPopularURL, threadListPopularJSON)
+	if testErr != nil {
+		t.Fatal(testErr)
 	}
 
 	values := url.Values{}
@@ -366,9 +366,9 @@ func TestThreadListTrending(t *testing.T) {
 	mockServer = mock.NewMockServer()
 	defer mockServer.Close()
 
-	threadsUrls.ThreadTrendingURL, err = mockServer.SwitchHostAndScheme(threadsUrls.ThreadTrendingURL, threadListTrendingJSON)
-	if err != nil {
-		t.Fatal(err)
+	threadsUrls.ThreadTrendingURL, testErr = mockServer.SwitchHostAndScheme(threadsUrls.ThreadTrendingURL, threadListTrendingJSON)
+	if testErr != nil {
+		t.Fatal(testErr)
 	}
 
 	testValues = url.Values{}

@@ -13,7 +13,7 @@ import (
 )
 
 var mockServer *mock.Server
-var err error
+var testErr error
 var testGisqus Gisqus
 var testCtx context.Context
 var testValues url.Values
@@ -28,7 +28,7 @@ func init() {
 
 }
 
-func readFile(fileName string) (string, error) {
+func readTestFile(fileName string) (string, error) {
 
 	f, err := os.Open(testDataDir + fileName)
 	defer f.Close()

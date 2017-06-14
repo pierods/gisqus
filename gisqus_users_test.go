@@ -27,47 +27,47 @@ var (
 func init() {
 
 	var err error
-	usersMostActiveForumsJSON, err = readFile("usersmostactiveforums.json")
+	usersMostActiveForumsJSON, err = readTestFile("usersmostactiveforums.json")
 	if err != nil {
 		fmt.Println(err)
 		os.Exit(-1)
 	}
-	usersActivitiesJSON, err = readFile("userslistactivity.json")
+	usersActivitiesJSON, err = readTestFile("userslistactivity.json")
 	if err != nil {
 		fmt.Println(err)
 		os.Exit(-1)
 	}
-	usersListPostsJSON, err = readFile("userslistposts.json")
+	usersListPostsJSON, err = readTestFile("userslistposts.json")
 	if err != nil {
 		fmt.Println(err)
 		os.Exit(-1)
 	}
-	usersUserDetailsJSON, err = readFile("usersuserdetail.json")
+	usersUserDetailsJSON, err = readTestFile("usersuserdetail.json")
 	if err != nil {
 		fmt.Println(err)
 		os.Exit(-1)
 	}
-	usersInterestingUsersJSON, err = readFile("usersinterestingusers.json")
+	usersInterestingUsersJSON, err = readTestFile("usersinterestingusers.json")
 	if err != nil {
 		fmt.Println(err)
 		os.Exit(-1)
 	}
-	usersActiveForumsJSON, err = readFile("usersactiveforums.json")
+	usersActiveForumsJSON, err = readTestFile("usersactiveforums.json")
 	if err != nil {
 		fmt.Println(err)
 		os.Exit(-1)
 	}
-	usersFollowersJSON, err = readFile("usersfollowers.json")
+	usersFollowersJSON, err = readTestFile("usersfollowers.json")
 	if err != nil {
 		fmt.Println(err)
 		os.Exit(-1)
 	}
-	usersFollowingJSON, err = readFile("usersfollowing.json")
+	usersFollowingJSON, err = readTestFile("usersfollowing.json")
 	if err != nil {
 		fmt.Println(err)
 		os.Exit(-1)
 	}
-	usersForumFollowingJSON, err = readFile("usersfollowingforums.json")
+	usersForumFollowingJSON, err = readTestFile("usersfollowingforums.json")
 	if err != nil {
 		fmt.Println(err)
 		os.Exit(-1)
@@ -79,14 +79,14 @@ func TestUserPosts(t *testing.T) {
 	mockServer = mock.NewMockServer()
 	defer mockServer.Close()
 
-	usersUrls.userPostListURL, err = mockServer.SwitchHostAndScheme(usersUrls.userPostListURL, usersListPostsJSON)
-	if err != nil {
-		t.Fatal(err)
+	usersUrls.userPostListURL, testErr = mockServer.SwitchHostAndScheme(usersUrls.userPostListURL, usersListPostsJSON)
+	if testErr != nil {
+		t.Fatal(testErr)
 	}
 
 	testValues = url.Values{}
-	_, err = testGisqus.UserPosts(testCtx, "", testValues)
-	if err == nil {
+	_, testErr = testGisqus.UserPosts(testCtx, "", testValues)
+	if testErr == nil {
 		t.Fatal("Should be able to reject a null user")
 	}
 	posts, err := testGisqus.UserPosts(testCtx, "79849", testValues)
@@ -124,13 +124,13 @@ func TestMostActiveForums(t *testing.T) {
 	mockServer = mock.NewMockServer()
 	defer mockServer.Close()
 
-	usersUrls.mostActiveForumsURL, err = mockServer.SwitchHostAndScheme(usersUrls.mostActiveForumsURL, usersMostActiveForumsJSON)
-	if err != nil {
-		t.Fatal(err)
+	usersUrls.mostActiveForumsURL, testErr = mockServer.SwitchHostAndScheme(usersUrls.mostActiveForumsURL, usersMostActiveForumsJSON)
+	if testErr != nil {
+		t.Fatal(testErr)
 	}
 	testValues = url.Values{}
-	_, err = testGisqus.UserDetails(testCtx, "", testValues)
-	if err == nil {
+	_, testErr = testGisqus.UserDetails(testCtx, "", testValues)
+	if testErr == nil {
 		t.Fatal("Should check for an empty user id")
 	}
 	forums, err := testGisqus.UserMostActiveForums(testCtx, "253940813", testValues)
@@ -158,13 +158,13 @@ func TestUserActivities(t *testing.T) {
 	mockServer = mock.NewMockServer()
 	defer mockServer.Close()
 
-	usersUrls.listActivityURL, err = mockServer.SwitchHostAndScheme(usersUrls.listActivityURL, usersActivitiesJSON)
-	if err != nil {
-		t.Fatal(err)
+	usersUrls.listActivityURL, testErr = mockServer.SwitchHostAndScheme(usersUrls.listActivityURL, usersActivitiesJSON)
+	if testErr != nil {
+		t.Fatal(testErr)
 	}
 	testValues = url.Values{}
-	_, err = testGisqus.UserDetails(testCtx, "", testValues)
-	if err == nil {
+	_, testErr = testGisqus.UserDetails(testCtx, "", testValues)
+	if testErr == nil {
 		t.Fatal("Should check for an empty user id")
 	}
 	activities, err := testGisqus.UserActivities(testCtx, "79849", testValues)
@@ -202,13 +202,13 @@ func TestUserDetails(t *testing.T) {
 	mockServer = mock.NewMockServer()
 	defer mockServer.Close()
 
-	usersUrls.userDetailURL, err = mockServer.SwitchHostAndScheme(usersUrls.userDetailURL, usersUserDetailsJSON)
-	if err != nil {
-		t.Fatal(err)
+	usersUrls.userDetailURL, testErr = mockServer.SwitchHostAndScheme(usersUrls.userDetailURL, usersUserDetailsJSON)
+	if testErr != nil {
+		t.Fatal(testErr)
 	}
 	testValues = url.Values{}
-	_, err = testGisqus.UserDetails(testCtx, "", testValues)
-	if err == nil {
+	_, testErr = testGisqus.UserDetails(testCtx, "", testValues)
+	if testErr == nil {
 		t.Fatal("Should check for an empty user id")
 	}
 	user, err := testGisqus.UserDetails(testCtx, "79849", testValues)
@@ -249,9 +249,9 @@ func TestUserInteresting(t *testing.T) {
 	mockServer = mock.NewMockServer()
 	defer mockServer.Close()
 
-	usersUrls.userInterestingIUsersURL, err = mockServer.SwitchHostAndScheme(usersUrls.userInterestingIUsersURL, usersInterestingUsersJSON)
-	if err != nil {
-		t.Fatal(err)
+	usersUrls.userInterestingIUsersURL, testErr = mockServer.SwitchHostAndScheme(usersUrls.userInterestingIUsersURL, usersInterestingUsersJSON)
+	if testErr != nil {
+		t.Fatal(testErr)
 	}
 
 	testValues = url.Values{}
@@ -291,14 +291,14 @@ func TestUserActiveForums(t *testing.T) {
 	mockServer = mock.NewMockServer()
 	defer mockServer.Close()
 
-	usersUrls.userActiveForums, err = mockServer.SwitchHostAndScheme(usersUrls.userActiveForums, usersActiveForumsJSON)
-	if err != nil {
-		t.Fatal(err)
+	usersUrls.userActiveForums, testErr = mockServer.SwitchHostAndScheme(usersUrls.userActiveForums, usersActiveForumsJSON)
+	if testErr != nil {
+		t.Fatal(testErr)
 	}
 
 	testValues = url.Values{}
-	_, err = testGisqus.UserActiveForums(testCtx, "", testValues)
-	if err == nil {
+	_, testErr = testGisqus.UserActiveForums(testCtx, "", testValues)
+	if testErr == nil {
 		t.Fatal("Should be able to reject an empty user id")
 	}
 
@@ -331,14 +331,14 @@ func TestUserFollowers(t *testing.T) {
 	mockServer = mock.NewMockServer()
 	defer mockServer.Close()
 
-	usersUrls.userFollowers, err = mockServer.SwitchHostAndScheme(usersUrls.userFollowers, usersFollowersJSON)
-	if err != nil {
-		t.Fatal(err)
+	usersUrls.userFollowers, testErr = mockServer.SwitchHostAndScheme(usersUrls.userFollowers, usersFollowersJSON)
+	if testErr != nil {
+		t.Fatal(testErr)
 	}
 
 	testValues = url.Values{}
-	_, err = testGisqus.UserFollowers(testCtx, "", testValues)
-	if err == nil {
+	_, testErr = testGisqus.UserFollowers(testCtx, "", testValues)
+	if testErr == nil {
 		t.Fatal("Should check for an empty user id")
 	}
 	users, err := testGisqus.UserFollowers(testCtx, "46351054", testValues)
@@ -368,14 +368,14 @@ func TestUserFollowing(t *testing.T) {
 	mockServer = mock.NewMockServer()
 	defer mockServer.Close()
 
-	usersUrls.userFollowing, err = mockServer.SwitchHostAndScheme(usersUrls.userFollowing, usersFollowingJSON)
-	if err != nil {
-		t.Fatal(err)
+	usersUrls.userFollowing, testErr = mockServer.SwitchHostAndScheme(usersUrls.userFollowing, usersFollowingJSON)
+	if testErr != nil {
+		t.Fatal(testErr)
 	}
 
 	testValues = url.Values{}
-	_, err = testGisqus.UserFollowing(testCtx, "", testValues)
-	if err == nil {
+	_, testErr = testGisqus.UserFollowing(testCtx, "", testValues)
+	if testErr == nil {
 		t.Fatal("Should check for an empty user id")
 	}
 	users, err := testGisqus.UserFollowing(testCtx, "195792235", testValues)
@@ -405,14 +405,14 @@ func TestUserForumFollowing(t *testing.T) {
 	mockServer = mock.NewMockServer()
 	defer mockServer.Close()
 
-	usersUrls.userFollowingForums, err = mockServer.SwitchHostAndScheme(usersUrls.userFollowingForums, usersForumFollowingJSON)
-	if err != nil {
-		t.Fatal(err)
+	usersUrls.userFollowingForums, testErr = mockServer.SwitchHostAndScheme(usersUrls.userFollowingForums, usersForumFollowingJSON)
+	if testErr != nil {
+		t.Fatal(testErr)
 	}
 
 	testValues = url.Values{}
-	_, err = testGisqus.UserForumFollowing(testCtx, "", testValues)
-	if err == nil {
+	_, testErr = testGisqus.UserForumFollowing(testCtx, "", testValues)
+	if testErr == nil {
 		t.Fatal("Should be able to reject an empty user id")
 	}
 

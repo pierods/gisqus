@@ -27,48 +27,48 @@ func init() {
 
 	var err error
 
-	forumInterestingForumsJSON, err = readFile("forumsinterestingforums.json")
+	forumInterestingForumsJSON, err = readTestFile("forumsinterestingforums.json")
 	if err != nil {
 		fmt.Println(err)
 		os.Exit(-1)
 	}
-	forumMostActiveUsersJSON, err = readFile("forumslistmostactive.json")
+	forumMostActiveUsersJSON, err = readTestFile("forumslistmostactive.json")
 	if err != nil {
 		fmt.Println(err)
 		os.Exit(-1)
 	}
 
-	forumListUsersJSON, err = readFile("forumslistforumusers.json")
+	forumListUsersJSON, err = readTestFile("forumslistforumusers.json")
 	if err != nil {
 		fmt.Println(err)
 		os.Exit(-1)
 
 	}
-	forumDetailsJSON, err = readFile("forumsforumdetails.json")
+	forumDetailsJSON, err = readTestFile("forumsforumdetails.json")
 	if err != nil {
 		fmt.Println(err)
 		os.Exit(-1)
 
 	}
-	forumListCategoriesJSON, err = readFile("forumslistcategories.json")
+	forumListCategoriesJSON, err = readTestFile("forumslistcategories.json")
 	if err != nil {
 		fmt.Println(err)
 		os.Exit(-1)
 
 	}
-	forumThreadListJSON, err = readFile("forumsforumlistthreads.json")
+	forumThreadListJSON, err = readTestFile("forumsforumlistthreads.json")
 	if err != nil {
 		fmt.Println(err)
 		os.Exit(-1)
 
 	}
-	forumMostLikedUsersJSON, err = readFile("forumsmostlikedusers.json")
+	forumMostLikedUsersJSON, err = readTestFile("forumsmostlikedusers.json")
 	if err != nil {
 		fmt.Println(err)
 		os.Exit(-1)
 
 	}
-	forumFollowersJSON, err = readFile("forumslistfollowers.json")
+	forumFollowersJSON, err = readTestFile("forumslistfollowers.json")
 	if err != nil {
 		fmt.Println(err)
 		os.Exit(-1)
@@ -80,13 +80,13 @@ func TestForumMostActiveUsers(t *testing.T) {
 	mockServer = mock.NewMockServer()
 	defer mockServer.Close()
 
-	forumsUrls.MostActiveUsersURL, err = mockServer.SwitchHostAndScheme(forumsUrls.MostActiveUsersURL, forumMostActiveUsersJSON)
-	if err != nil {
-		t.Fatal(err)
+	forumsUrls.MostActiveUsersURL, testErr = mockServer.SwitchHostAndScheme(forumsUrls.MostActiveUsersURL, forumMostActiveUsersJSON)
+	if testErr != nil {
+		t.Fatal(testErr)
 	}
 	testValues = url.Values{}
-	_, err = testGisqus.ForumMostActiveUsers(testCtx, "", testValues)
-	if err == nil {
+	_, testErr = testGisqus.ForumMostActiveUsers(testCtx, "", testValues)
+	if testErr == nil {
 		t.Fatal("Should be able to reject a null forum")
 	}
 	users, err := testGisqus.ForumMostActiveUsers(testCtx, "mapleleafshotstove", testValues)
@@ -119,13 +119,13 @@ func TestForumFollowers(t *testing.T) {
 	mockServer = mock.NewMockServer()
 	defer mockServer.Close()
 
-	forumsUrls.ListFollowersURL, err = mockServer.SwitchHostAndScheme(forumsUrls.ListFollowersURL, forumFollowersJSON)
-	if err != nil {
-		t.Fatal(err)
+	forumsUrls.ListFollowersURL, testErr = mockServer.SwitchHostAndScheme(forumsUrls.ListFollowersURL, forumFollowersJSON)
+	if testErr != nil {
+		t.Fatal(testErr)
 	}
 	testValues = url.Values{}
-	_, err = testGisqus.ForumFollowers(testCtx, "", testValues)
-	if err == nil {
+	_, testErr = testGisqus.ForumFollowers(testCtx, "", testValues)
+	if testErr == nil {
 		t.Fatal("Should be able to reject a null forum")
 	}
 	users, err := testGisqus.ForumFollowers(testCtx, "mapleleafshotstove", testValues)
@@ -158,14 +158,14 @@ func TestForumUsers(t *testing.T) {
 	mockServer = mock.NewMockServer()
 	defer mockServer.Close()
 
-	forumsUrls.ListUsersURL, err = mockServer.SwitchHostAndScheme(forumsUrls.ListUsersURL, forumListUsersJSON)
-	if err != nil {
-		t.Fatal(err)
+	forumsUrls.ListUsersURL, testErr = mockServer.SwitchHostAndScheme(forumsUrls.ListUsersURL, forumListUsersJSON)
+	if testErr != nil {
+		t.Fatal(testErr)
 	}
 
 	testValues = url.Values{}
-	_, err = testGisqus.ForumUsers(testCtx, "", testValues)
-	if err == nil {
+	_, testErr = testGisqus.ForumUsers(testCtx, "", testValues)
+	if testErr == nil {
 		t.Fatal("Should be able to reject a null forum")
 	}
 	users, err := testGisqus.ForumUsers(testCtx, "mapleleafshotstove", testValues)
@@ -197,9 +197,9 @@ func TestForumsInteresting(t *testing.T) {
 	mockServer = mock.NewMockServer()
 	defer mockServer.Close()
 
-	forumsUrls.InterestingForumsURL, err = mockServer.SwitchHostAndScheme(forumsUrls.InterestingForumsURL, forumInterestingForumsJSON)
-	if err != nil {
-		t.Fatal(err)
+	forumsUrls.InterestingForumsURL, testErr = mockServer.SwitchHostAndScheme(forumsUrls.InterestingForumsURL, forumInterestingForumsJSON)
+	if testErr != nil {
+		t.Fatal(testErr)
 	}
 
 	testValues = url.Values{}
@@ -245,14 +245,14 @@ func TestForumDetails(t *testing.T) {
 	mockServer = mock.NewMockServer()
 	defer mockServer.Close()
 
-	forumsUrls.DetailsURL, err = mockServer.SwitchHostAndScheme(forumsUrls.DetailsURL, forumDetailsJSON)
-	if err != nil {
-		t.Fatal(err)
+	forumsUrls.DetailsURL, testErr = mockServer.SwitchHostAndScheme(forumsUrls.DetailsURL, forumDetailsJSON)
+	if testErr != nil {
+		t.Fatal(testErr)
 	}
 
 	testValues = url.Values{}
-	_, err = testGisqus.ForumDetails(testCtx, "", testValues)
-	if err == nil {
+	_, testErr = testGisqus.ForumDetails(testCtx, "", testValues)
+	if testErr == nil {
 		t.Fatal("Should check for an empty forum id")
 	}
 	details, err := testGisqus.ForumDetails(testCtx, "mapleleafshotstove", testValues)
@@ -278,14 +278,14 @@ func TestForumCategories(t *testing.T) {
 	mockServer = mock.NewMockServer()
 	defer mockServer.Close()
 
-	forumsUrls.CategoriesURL, err = mockServer.SwitchHostAndScheme(forumsUrls.CategoriesURL, forumListCategoriesJSON)
-	if err != nil {
-		t.Fatal(err)
+	forumsUrls.CategoriesURL, testErr = mockServer.SwitchHostAndScheme(forumsUrls.CategoriesURL, forumListCategoriesJSON)
+	if testErr != nil {
+		t.Fatal(testErr)
 	}
 
 	testValues = url.Values{}
-	_, err = testGisqus.ForumCategories(testCtx, "", testValues)
-	if err == nil {
+	_, testErr = testGisqus.ForumCategories(testCtx, "", testValues)
+	if testErr == nil {
 		t.Fatal("Should check for an empty forum id")
 	}
 	categories, err := testGisqus.ForumCategories(testCtx, "mapleleafshotstove", testValues)
@@ -309,14 +309,14 @@ func TestForumThreads(t *testing.T) {
 	mockServer = mock.NewMockServer()
 	defer mockServer.Close()
 
-	forumsUrls.ListThreadsURL, err = mockServer.SwitchHostAndScheme(forumsUrls.ListThreadsURL, forumThreadListJSON)
-	if err != nil {
-		t.Fatal(err)
+	forumsUrls.ListThreadsURL, testErr = mockServer.SwitchHostAndScheme(forumsUrls.ListThreadsURL, forumThreadListJSON)
+	if testErr != nil {
+		t.Fatal(testErr)
 	}
 
 	testValues = url.Values{}
-	_, err = testGisqus.ForumThreads(testCtx, "", testValues)
-	if err == nil {
+	_, testErr = testGisqus.ForumThreads(testCtx, "", testValues)
+	if testErr == nil {
 		t.Fatal("Should check for an empty forum id")
 	}
 	threads, err := testGisqus.ForumThreads(testCtx, "mapleleafshotstove", testValues)
@@ -354,14 +354,14 @@ func TestForumMostLikedUsers(t *testing.T) {
 	mockServer = mock.NewMockServer()
 	defer mockServer.Close()
 
-	forumsUrls.MostLikedUsersURL, err = mockServer.SwitchHostAndScheme(forumsUrls.MostLikedUsersURL, forumMostLikedUsersJSON)
-	if err != nil {
-		t.Fatal(err)
+	forumsUrls.MostLikedUsersURL, testErr = mockServer.SwitchHostAndScheme(forumsUrls.MostLikedUsersURL, forumMostLikedUsersJSON)
+	if testErr != nil {
+		t.Fatal(testErr)
 	}
 
 	testValues = url.Values{}
-	_, err = testGisqus.ForumMostLikedUsers(testCtx, "", testValues)
-	if err == nil {
+	_, testErr = testGisqus.ForumMostLikedUsers(testCtx, "", testValues)
+	if testErr == nil {
 		t.Fatal("Should be able to reject a null forum")
 	}
 	users, err := testGisqus.ForumMostLikedUsers(testCtx, "mapleleafshotstove", testValues)
@@ -388,9 +388,9 @@ func TestRetrieveCursor(t *testing.T) {
 	mockServer = mock.NewMockServer()
 	defer mockServer.Close()
 
-	forumsUrls.ListUsersURL, err = mockServer.SwitchHostAndScheme(forumsUrls.ListUsersURL, forumListUsersJSON)
-	if err != nil {
-		t.Fatal(err)
+	forumsUrls.ListUsersURL, testErr = mockServer.SwitchHostAndScheme(forumsUrls.ListUsersURL, forumListUsersJSON)
+	if testErr != nil {
+		t.Fatal(testErr)
 	}
 
 	testValues = url.Values{}
