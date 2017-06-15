@@ -10,76 +10,100 @@ import (
 	"testing"
 )
 
-var (
-	forumInterestingForumsJSON string
-	forumListUsersJSON         string
-	forumDetailsJSON           string
-	forumListCategoriesJSON    string
-	forumThreadListJSON        string
-	forumMostLikedUsersJSON    string
-	forumFollowersJSON         string
-	forumMostActiveUsersJSON   string
-)
-
 func init() {
 
 	var err error
 
-	forumInterestingForumsJSON, err = readTestFile("forumsinterestingforums.json")
+	forumInterestingForumsJSON, err := readTestFile("forumsinterestingforums.json")
 	if err != nil {
 		fmt.Println(err)
 		os.Exit(-1)
 	}
-	forumMostActiveUsersJSON, err = readTestFile("forumslistmostactive.json")
+	forumMostActiveUsersJSON, err := readTestFile("forumslistmostactive.json")
 	if err != nil {
 		fmt.Println(err)
 		os.Exit(-1)
 	}
 
-	forumListUsersJSON, err = readTestFile("forumslistforumusers.json")
+	forumListUsersJSON, err := readTestFile("forumslistforumusers.json")
 	if err != nil {
 		fmt.Println(err)
 		os.Exit(-1)
-
 	}
-	forumDetailsJSON, err = readTestFile("forumsforumdetails.json")
+	forumDetailsJSON, err := readTestFile("forumsforumdetails.json")
 	if err != nil {
 		fmt.Println(err)
 		os.Exit(-1)
-
 	}
-	forumListCategoriesJSON, err = readTestFile("forumslistcategories.json")
+	forumListCategoriesJSON, err := readTestFile("forumslistcategories.json")
 	if err != nil {
 		fmt.Println(err)
 		os.Exit(-1)
-
 	}
-	forumThreadListJSON, err = readTestFile("forumsforumlistthreads.json")
+	forumThreadListJSON, err := readTestFile("forumsforumlistthreads.json")
 	if err != nil {
 		fmt.Println(err)
 		os.Exit(-1)
-
 	}
-	forumMostLikedUsersJSON, err = readTestFile("forumsmostlikedusers.json")
+	forumMostLikedUsersJSON, err := readTestFile("forumsmostlikedusers.json")
 	if err != nil {
 		fmt.Println(err)
 		os.Exit(-1)
-
 	}
-	forumFollowersJSON, err = readTestFile("forumslistfollowers.json")
+	forumFollowersJSON, err := readTestFile("forumslistfollowers.json")
 	if err != nil {
 		fmt.Println(err)
 		os.Exit(-1)
-
+	}
+	forumsUrls.MostActiveUsersURL, testErr = mockServer.SwitchHostAndScheme(forumsUrls.MostActiveUsersURL, forumMostActiveUsersJSON)
+	if testErr != nil {
+		fmt.Println(err)
+		os.Exit(-1)
+	}
+	forumsUrls.ListFollowersURL, testErr = mockServer.SwitchHostAndScheme(forumsUrls.ListFollowersURL, forumFollowersJSON)
+	if testErr != nil {
+		fmt.Println(err)
+		os.Exit(-1)
+	}
+	forumsUrls.ListUsersURL, testErr = mockServer.SwitchHostAndScheme(forumsUrls.ListUsersURL, forumListUsersJSON)
+	if testErr != nil {
+		fmt.Println(err)
+		os.Exit(-1)
+	}
+	forumsUrls.InterestingForumsURL, testErr = mockServer.SwitchHostAndScheme(forumsUrls.InterestingForumsURL, forumInterestingForumsJSON)
+	if testErr != nil {
+		fmt.Println(err)
+		os.Exit(-1)
+	}
+	forumsUrls.DetailsURL, testErr = mockServer.SwitchHostAndScheme(forumsUrls.DetailsURL, forumDetailsJSON)
+	if testErr != nil {
+		fmt.Println(err)
+		os.Exit(-1)
+	}
+	forumsUrls.CategoriesURL, testErr = mockServer.SwitchHostAndScheme(forumsUrls.CategoriesURL, forumListCategoriesJSON)
+	if testErr != nil {
+		fmt.Println(err)
+		os.Exit(-1)
+	}
+	forumsUrls.ListThreadsURL, testErr = mockServer.SwitchHostAndScheme(forumsUrls.ListThreadsURL, forumThreadListJSON)
+	if testErr != nil {
+		fmt.Println(err)
+		os.Exit(-1)
+	}
+	forumsUrls.MostLikedUsersURL, testErr = mockServer.SwitchHostAndScheme(forumsUrls.MostLikedUsersURL, forumMostLikedUsersJSON)
+	if testErr != nil {
+		fmt.Println(err)
+		os.Exit(-1)
+	}
+	forumsUrls.ListUsersURL, testErr = mockServer.SwitchHostAndScheme(forumsUrls.ListUsersURL, forumListUsersJSON)
+	if testErr != nil {
+		fmt.Println(err)
+		os.Exit(-1)
 	}
 }
 
 func TestForumMostActiveUsers(t *testing.T) {
 
-	forumsUrls.MostActiveUsersURL, testErr = mockServer.SwitchHostAndScheme(forumsUrls.MostActiveUsersURL, forumMostActiveUsersJSON)
-	if testErr != nil {
-		t.Fatal(testErr)
-	}
 	testValues = url.Values{}
 	_, testErr = testGisqus.ForumMostActiveUsers(testCtx, "", testValues)
 	if testErr == nil {
@@ -113,10 +137,6 @@ func TestForumMostActiveUsers(t *testing.T) {
 
 func TestForumFollowers(t *testing.T) {
 
-	forumsUrls.ListFollowersURL, testErr = mockServer.SwitchHostAndScheme(forumsUrls.ListFollowersURL, forumFollowersJSON)
-	if testErr != nil {
-		t.Fatal(testErr)
-	}
 	testValues = url.Values{}
 	_, testErr = testGisqus.ForumFollowers(testCtx, "", testValues)
 	if testErr == nil {
@@ -149,11 +169,6 @@ func TestForumFollowers(t *testing.T) {
 
 func TestForumUsers(t *testing.T) {
 
-	forumsUrls.ListUsersURL, testErr = mockServer.SwitchHostAndScheme(forumsUrls.ListUsersURL, forumListUsersJSON)
-	if testErr != nil {
-		t.Fatal(testErr)
-	}
-
 	testValues = url.Values{}
 	_, testErr = testGisqus.ForumUsers(testCtx, "", testValues)
 	if testErr == nil {
@@ -184,11 +199,6 @@ func TestForumUsers(t *testing.T) {
 }
 
 func TestForumsInteresting(t *testing.T) {
-
-	forumsUrls.InterestingForumsURL, testErr = mockServer.SwitchHostAndScheme(forumsUrls.InterestingForumsURL, forumInterestingForumsJSON)
-	if testErr != nil {
-		t.Fatal(testErr)
-	}
 
 	testValues = url.Values{}
 	interestingForums, err := testGisqus.ForumInteresting(testCtx, testValues)
@@ -230,11 +240,6 @@ func TestForumsInteresting(t *testing.T) {
 
 func TestForumDetails(t *testing.T) {
 
-	forumsUrls.DetailsURL, testErr = mockServer.SwitchHostAndScheme(forumsUrls.DetailsURL, forumDetailsJSON)
-	if testErr != nil {
-		t.Fatal(testErr)
-	}
-
 	testValues = url.Values{}
 	_, testErr = testGisqus.ForumDetails(testCtx, "", testValues)
 	if testErr == nil {
@@ -260,11 +265,6 @@ func TestForumDetails(t *testing.T) {
 
 func TestForumCategories(t *testing.T) {
 
-	forumsUrls.CategoriesURL, testErr = mockServer.SwitchHostAndScheme(forumsUrls.CategoriesURL, forumListCategoriesJSON)
-	if testErr != nil {
-		t.Fatal(testErr)
-	}
-
 	testValues = url.Values{}
 	_, testErr = testGisqus.ForumCategories(testCtx, "", testValues)
 	if testErr == nil {
@@ -287,11 +287,6 @@ func TestForumCategories(t *testing.T) {
 }
 
 func TestForumThreads(t *testing.T) {
-
-	forumsUrls.ListThreadsURL, testErr = mockServer.SwitchHostAndScheme(forumsUrls.ListThreadsURL, forumThreadListJSON)
-	if testErr != nil {
-		t.Fatal(testErr)
-	}
 
 	testValues = url.Values{}
 	_, testErr = testGisqus.ForumThreads(testCtx, "", testValues)
@@ -330,11 +325,6 @@ func TestForumThreads(t *testing.T) {
 
 func TestForumMostLikedUsers(t *testing.T) {
 
-	forumsUrls.MostLikedUsersURL, testErr = mockServer.SwitchHostAndScheme(forumsUrls.MostLikedUsersURL, forumMostLikedUsersJSON)
-	if testErr != nil {
-		t.Fatal(testErr)
-	}
-
 	testValues = url.Values{}
 	_, testErr = testGisqus.ForumMostLikedUsers(testCtx, "", testValues)
 	if testErr == nil {
@@ -360,11 +350,6 @@ func TestForumMostLikedUsers(t *testing.T) {
 }
 
 func TestRetrieveCursor(t *testing.T) {
-
-	forumsUrls.ListUsersURL, testErr = mockServer.SwitchHostAndScheme(forumsUrls.ListUsersURL, forumListUsersJSON)
-	if testErr != nil {
-		t.Fatal(testErr)
-	}
 
 	testValues = url.Values{}
 	users, err := testGisqus.ForumUsers(testCtx, "mapleleafshotstove", testValues)

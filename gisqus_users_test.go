@@ -10,74 +10,102 @@ import (
 	"testing"
 )
 
-var (
-	usersListPostsJSON        string
-	usersUserDetailsJSON      string
-	usersInterestingUsersJSON string
-	usersActiveForumsJSON     string
-	usersFollowersJSON        string
-	usersFollowingJSON        string
-	usersForumFollowingJSON   string
-	usersActivitiesJSON       string
-	usersMostActiveForumsJSON string
-)
-
 func init() {
 
 	var err error
-	usersMostActiveForumsJSON, err = readTestFile("usersmostactiveforums.json")
+	usersMostActiveForumsJSON, err := readTestFile("usersmostactiveforums.json")
 	if err != nil {
 		fmt.Println(err)
 		os.Exit(-1)
 	}
-	usersActivitiesJSON, err = readTestFile("userslistactivity.json")
+	usersActivitiesJSON, err := readTestFile("userslistactivity.json")
 	if err != nil {
 		fmt.Println(err)
 		os.Exit(-1)
 	}
-	usersListPostsJSON, err = readTestFile("userslistposts.json")
+	usersListPostsJSON, err := readTestFile("userslistposts.json")
 	if err != nil {
 		fmt.Println(err)
 		os.Exit(-1)
 	}
-	usersUserDetailsJSON, err = readTestFile("usersuserdetail.json")
+	usersUserDetailsJSON, err := readTestFile("usersuserdetail.json")
 	if err != nil {
 		fmt.Println(err)
 		os.Exit(-1)
 	}
-	usersInterestingUsersJSON, err = readTestFile("usersinterestingusers.json")
+	usersInterestingUsersJSON, err := readTestFile("usersinterestingusers.json")
 	if err != nil {
 		fmt.Println(err)
 		os.Exit(-1)
 	}
-	usersActiveForumsJSON, err = readTestFile("usersactiveforums.json")
+	usersActiveForumsJSON, err := readTestFile("usersactiveforums.json")
 	if err != nil {
 		fmt.Println(err)
 		os.Exit(-1)
 	}
-	usersFollowersJSON, err = readTestFile("usersfollowers.json")
+	usersFollowersJSON, err := readTestFile("usersfollowers.json")
 	if err != nil {
 		fmt.Println(err)
 		os.Exit(-1)
 	}
-	usersFollowingJSON, err = readTestFile("usersfollowing.json")
+	usersFollowingJSON, err := readTestFile("usersfollowing.json")
 	if err != nil {
 		fmt.Println(err)
 		os.Exit(-1)
 	}
-	usersForumFollowingJSON, err = readTestFile("usersfollowingforums.json")
+	usersForumFollowingJSON, err := readTestFile("usersfollowingforums.json")
 	if err != nil {
+		fmt.Println(err)
+		os.Exit(-1)
+	}
+	usersUrls.userPostListURL, testErr = mockServer.SwitchHostAndScheme(usersUrls.userPostListURL, usersListPostsJSON)
+	if testErr != nil {
+		fmt.Println(err)
+		os.Exit(-1)
+	}
+	usersUrls.mostActiveForumsURL, testErr = mockServer.SwitchHostAndScheme(usersUrls.mostActiveForumsURL, usersMostActiveForumsJSON)
+	if testErr != nil {
+		fmt.Println(err)
+		os.Exit(-1)
+	}
+	usersUrls.listActivityURL, testErr = mockServer.SwitchHostAndScheme(usersUrls.listActivityURL, usersActivitiesJSON)
+	if testErr != nil {
+		fmt.Println(err)
+		os.Exit(-1)
+	}
+	usersUrls.userDetailURL, testErr = mockServer.SwitchHostAndScheme(usersUrls.userDetailURL, usersUserDetailsJSON)
+	if testErr != nil {
+		fmt.Println(err)
+		os.Exit(-1)
+	}
+	usersUrls.userInterestingIUsersURL, testErr = mockServer.SwitchHostAndScheme(usersUrls.userInterestingIUsersURL, usersInterestingUsersJSON)
+	if testErr != nil {
+		fmt.Println(err)
+		os.Exit(-1)
+	}
+	usersUrls.userActiveForums, testErr = mockServer.SwitchHostAndScheme(usersUrls.userActiveForums, usersActiveForumsJSON)
+	if testErr != nil {
+		fmt.Println(err)
+		os.Exit(-1)
+	}
+	usersUrls.userFollowers, testErr = mockServer.SwitchHostAndScheme(usersUrls.userFollowers, usersFollowersJSON)
+	if testErr != nil {
+		fmt.Println(err)
+		os.Exit(-1)
+	}
+	usersUrls.userFollowing, testErr = mockServer.SwitchHostAndScheme(usersUrls.userFollowing, usersFollowingJSON)
+	if testErr != nil {
+		fmt.Println(err)
+		os.Exit(-1)
+	}
+	usersUrls.userFollowingForums, testErr = mockServer.SwitchHostAndScheme(usersUrls.userFollowingForums, usersForumFollowingJSON)
+	if testErr != nil {
 		fmt.Println(err)
 		os.Exit(-1)
 	}
 }
 
 func TestUserPosts(t *testing.T) {
-
-	usersUrls.userPostListURL, testErr = mockServer.SwitchHostAndScheme(usersUrls.userPostListURL, usersListPostsJSON)
-	if testErr != nil {
-		t.Fatal(testErr)
-	}
 
 	testValues = url.Values{}
 	_, testErr = testGisqus.UserPosts(testCtx, "", testValues)
@@ -116,10 +144,6 @@ func TestUserPosts(t *testing.T) {
 
 func TestMostActiveForums(t *testing.T) {
 
-	usersUrls.mostActiveForumsURL, testErr = mockServer.SwitchHostAndScheme(usersUrls.mostActiveForumsURL, usersMostActiveForumsJSON)
-	if testErr != nil {
-		t.Fatal(testErr)
-	}
 	testValues = url.Values{}
 	_, testErr = testGisqus.UserDetails(testCtx, "", testValues)
 	if testErr == nil {
@@ -147,10 +171,6 @@ func TestMostActiveForums(t *testing.T) {
 
 func TestUserActivities(t *testing.T) {
 
-	usersUrls.listActivityURL, testErr = mockServer.SwitchHostAndScheme(usersUrls.listActivityURL, usersActivitiesJSON)
-	if testErr != nil {
-		t.Fatal(testErr)
-	}
 	testValues = url.Values{}
 	_, testErr = testGisqus.UserDetails(testCtx, "", testValues)
 	if testErr == nil {
@@ -188,10 +208,6 @@ func TestUserActivities(t *testing.T) {
 
 func TestUserDetails(t *testing.T) {
 
-	usersUrls.userDetailURL, testErr = mockServer.SwitchHostAndScheme(usersUrls.userDetailURL, usersUserDetailsJSON)
-	if testErr != nil {
-		t.Fatal(testErr)
-	}
 	testValues = url.Values{}
 	_, testErr = testGisqus.UserDetails(testCtx, "", testValues)
 	if testErr == nil {
@@ -232,11 +248,6 @@ func TestUserDetails(t *testing.T) {
 
 func TestUserInteresting(t *testing.T) {
 
-	usersUrls.userInterestingIUsersURL, testErr = mockServer.SwitchHostAndScheme(usersUrls.userInterestingIUsersURL, usersInterestingUsersJSON)
-	if testErr != nil {
-		t.Fatal(testErr)
-	}
-
 	testValues = url.Values{}
 	users, err := testGisqus.UserInteresting(testCtx, testValues)
 	if err != nil {
@@ -271,11 +282,6 @@ func TestUserInteresting(t *testing.T) {
 
 func TestUserActiveForums(t *testing.T) {
 
-	usersUrls.userActiveForums, testErr = mockServer.SwitchHostAndScheme(usersUrls.userActiveForums, usersActiveForumsJSON)
-	if testErr != nil {
-		t.Fatal(testErr)
-	}
-
 	testValues = url.Values{}
 	_, testErr = testGisqus.UserActiveForums(testCtx, "", testValues)
 	if testErr == nil {
@@ -308,11 +314,6 @@ func TestUserActiveForums(t *testing.T) {
 
 func TestUserFollowers(t *testing.T) {
 
-	usersUrls.userFollowers, testErr = mockServer.SwitchHostAndScheme(usersUrls.userFollowers, usersFollowersJSON)
-	if testErr != nil {
-		t.Fatal(testErr)
-	}
-
 	testValues = url.Values{}
 	_, testErr = testGisqus.UserFollowers(testCtx, "", testValues)
 	if testErr == nil {
@@ -342,11 +343,6 @@ func TestUserFollowers(t *testing.T) {
 
 func TestUserFollowing(t *testing.T) {
 
-	usersUrls.userFollowing, testErr = mockServer.SwitchHostAndScheme(usersUrls.userFollowing, usersFollowingJSON)
-	if testErr != nil {
-		t.Fatal(testErr)
-	}
-
 	testValues = url.Values{}
 	_, testErr = testGisqus.UserFollowing(testCtx, "", testValues)
 	if testErr == nil {
@@ -375,11 +371,6 @@ func TestUserFollowing(t *testing.T) {
 }
 
 func TestUserForumFollowing(t *testing.T) {
-
-	usersUrls.userFollowingForums, testErr = mockServer.SwitchHostAndScheme(usersUrls.userFollowingForums, usersForumFollowingJSON)
-	if testErr != nil {
-		t.Fatal(testErr)
-	}
 
 	testValues = url.Values{}
 	_, testErr = testGisqus.UserForumFollowing(testCtx, "", testValues)

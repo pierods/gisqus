@@ -10,28 +10,36 @@ import (
 	"testing"
 )
 
-var (
-	postDetailsJSON string
-	postListJSON    string
-	postPopularJSON string
-)
-
 func init() {
 
 	var err error
-	postPopularJSON, err = readTestFile("postspostpopular.json")
+	postPopularJSON, err := readTestFile("postspostpopular.json")
 	if err != nil {
 		fmt.Println(err)
 		os.Exit(-1)
 	}
-	postDetailsJSON, err = readTestFile("postspostdetails.json")
+	postDetailsJSON, err := readTestFile("postspostdetails.json")
 	if err != nil {
 		fmt.Println(err)
 		os.Exit(-1)
 	}
-	postListJSON, err = readTestFile("postspostlist.json")
+	postListJSON, err := readTestFile("postspostlist.json")
 	if err != nil {
 		fmt.Println(err)
+		os.Exit(-1)
+	}
+
+	postsUrls.PostDetailsURL, testErr = mockServer.SwitchHostAndScheme(postsUrls.PostDetailsURL, postDetailsJSON)
+	if testErr != nil {
+		os.Exit(-1)
+	}
+
+	postsUrls.PostListURL, testErr = mockServer.SwitchHostAndScheme(postsUrls.PostListURL, postListJSON)
+	if testErr != nil {
+		os.Exit(-1)
+	}
+	postsUrls.PostPopularURL, testErr = mockServer.SwitchHostAndScheme(postsUrls.PostPopularURL, postPopularJSON)
+	if testErr != nil {
 		os.Exit(-1)
 	}
 
@@ -41,10 +49,6 @@ func TestPostDetails(t *testing.T) {
 
 	testValues = url.Values{}
 
-	postsUrls.PostDetailsURL, testErr = mockServer.SwitchHostAndScheme(postsUrls.PostDetailsURL, postDetailsJSON)
-	if testErr != nil {
-		t.Fatal(testErr)
-	}
 	_, testErr = testGisqus.PostDetails(testCtx, "", testValues)
 	if testErr == nil {
 		t.Fatal("Should check for an empty post id")
@@ -77,11 +81,6 @@ func TestPostDetails(t *testing.T) {
 }
 
 func TestPostList(t *testing.T) {
-
-	postsUrls.PostListURL, testErr = mockServer.SwitchHostAndScheme(postsUrls.PostListURL, postListJSON)
-	if testErr != nil {
-		t.Fatal(testErr)
-	}
 
 	values := url.Values{}
 
@@ -117,11 +116,6 @@ func TestPostList(t *testing.T) {
 }
 
 func TestPostPopular(t *testing.T) {
-
-	postsUrls.PostPopularURL, testErr = mockServer.SwitchHostAndScheme(postsUrls.PostPopularURL, postPopularJSON)
-	if testErr != nil {
-		t.Fatal(testErr)
-	}
 
 	values := url.Values{}
 
