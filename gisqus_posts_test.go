@@ -8,8 +8,6 @@ import (
 	"net/url"
 	"os"
 	"testing"
-
-	"github.com/pierods/gisqus/mock"
 )
 
 var (
@@ -36,11 +34,11 @@ func init() {
 		fmt.Println(err)
 		os.Exit(-1)
 	}
+
 }
 
 func TestPostDetails(t *testing.T) {
-	mockServer = mock.NewMockServer()
-	defer mockServer.Close()
+
 	testValues = url.Values{}
 
 	postsUrls.PostDetailsURL, testErr = mockServer.SwitchHostAndScheme(postsUrls.PostDetailsURL, postDetailsJSON)
@@ -79,9 +77,6 @@ func TestPostDetails(t *testing.T) {
 }
 
 func TestPostList(t *testing.T) {
-
-	mockServer = mock.NewMockServer()
-	defer mockServer.Close()
 
 	postsUrls.PostListURL, testErr = mockServer.SwitchHostAndScheme(postsUrls.PostListURL, postListJSON)
 	if testErr != nil {
@@ -122,9 +117,6 @@ func TestPostList(t *testing.T) {
 }
 
 func TestPostPopular(t *testing.T) {
-
-	mockServer = mock.NewMockServer()
-	defer mockServer.Close()
 
 	postsUrls.PostPopularURL, testErr = mockServer.SwitchHostAndScheme(postsUrls.PostPopularURL, postPopularJSON)
 	if testErr != nil {

@@ -8,8 +8,6 @@ import (
 	"net/url"
 	"os"
 	"testing"
-
-	"github.com/pierods/gisqus/mock"
 )
 
 var (
@@ -76,9 +74,6 @@ func init() {
 
 func TestUserPosts(t *testing.T) {
 
-	mockServer = mock.NewMockServer()
-	defer mockServer.Close()
-
 	usersUrls.userPostListURL, testErr = mockServer.SwitchHostAndScheme(usersUrls.userPostListURL, usersListPostsJSON)
 	if testErr != nil {
 		t.Fatal(testErr)
@@ -121,9 +116,6 @@ func TestUserPosts(t *testing.T) {
 
 func TestMostActiveForums(t *testing.T) {
 
-	mockServer = mock.NewMockServer()
-	defer mockServer.Close()
-
 	usersUrls.mostActiveForumsURL, testErr = mockServer.SwitchHostAndScheme(usersUrls.mostActiveForumsURL, usersMostActiveForumsJSON)
 	if testErr != nil {
 		t.Fatal(testErr)
@@ -154,9 +146,6 @@ func TestMostActiveForums(t *testing.T) {
 }
 
 func TestUserActivities(t *testing.T) {
-
-	mockServer = mock.NewMockServer()
-	defer mockServer.Close()
 
 	usersUrls.listActivityURL, testErr = mockServer.SwitchHostAndScheme(usersUrls.listActivityURL, usersActivitiesJSON)
 	if testErr != nil {
@@ -198,9 +187,6 @@ func TestUserActivities(t *testing.T) {
 }
 
 func TestUserDetails(t *testing.T) {
-
-	mockServer = mock.NewMockServer()
-	defer mockServer.Close()
 
 	usersUrls.userDetailURL, testErr = mockServer.SwitchHostAndScheme(usersUrls.userDetailURL, usersUserDetailsJSON)
 	if testErr != nil {
@@ -246,9 +232,6 @@ func TestUserDetails(t *testing.T) {
 
 func TestUserInteresting(t *testing.T) {
 
-	mockServer = mock.NewMockServer()
-	defer mockServer.Close()
-
 	usersUrls.userInterestingIUsersURL, testErr = mockServer.SwitchHostAndScheme(usersUrls.userInterestingIUsersURL, usersInterestingUsersJSON)
 	if testErr != nil {
 		t.Fatal(testErr)
@@ -288,9 +271,6 @@ func TestUserInteresting(t *testing.T) {
 
 func TestUserActiveForums(t *testing.T) {
 
-	mockServer = mock.NewMockServer()
-	defer mockServer.Close()
-
 	usersUrls.userActiveForums, testErr = mockServer.SwitchHostAndScheme(usersUrls.userActiveForums, usersActiveForumsJSON)
 	if testErr != nil {
 		t.Fatal(testErr)
@@ -328,9 +308,6 @@ func TestUserActiveForums(t *testing.T) {
 
 func TestUserFollowers(t *testing.T) {
 
-	mockServer = mock.NewMockServer()
-	defer mockServer.Close()
-
 	usersUrls.userFollowers, testErr = mockServer.SwitchHostAndScheme(usersUrls.userFollowers, usersFollowersJSON)
 	if testErr != nil {
 		t.Fatal(testErr)
@@ -365,9 +342,6 @@ func TestUserFollowers(t *testing.T) {
 
 func TestUserFollowing(t *testing.T) {
 
-	mockServer = mock.NewMockServer()
-	defer mockServer.Close()
-
 	usersUrls.userFollowing, testErr = mockServer.SwitchHostAndScheme(usersUrls.userFollowing, usersFollowingJSON)
 	if testErr != nil {
 		t.Fatal(testErr)
@@ -401,9 +375,6 @@ func TestUserFollowing(t *testing.T) {
 }
 
 func TestUserForumFollowing(t *testing.T) {
-
-	mockServer = mock.NewMockServer()
-	defer mockServer.Close()
 
 	usersUrls.userFollowingForums, testErr = mockServer.SwitchHostAndScheme(usersUrls.userFollowingForums, usersForumFollowingJSON)
 	if testErr != nil {

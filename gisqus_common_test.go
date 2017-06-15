@@ -8,6 +8,7 @@ import (
 	"io/ioutil"
 	"net/url"
 	"os"
+	"testing"
 
 	"github.com/pierods/gisqus/mock"
 )
@@ -22,10 +23,18 @@ var testDataDir string
 func init() {
 	testGisqus = NewGisqus("secret")
 	testCtx, _ = context.WithCancel(context.TODO())
+	mockServer = mock.NewMockServer()
 
 	goPath := os.Getenv("GOPATH")
 	testDataDir = goPath + "/src/github.com/pierods/gisqus/testdata/"
 
+}
+
+func TestMain(m *testing.M) {
+
+	defer mockServer.Close()
+	retCode := m.Run()
+	os.Exit(retCode)
 }
 
 func readTestFile(fileName string) (string, error) {
