@@ -115,7 +115,6 @@ func TestForumMostActiveUsers(t *testing.T) {
 	}
 
 	if len(users.Response) != 24 {
-		t.Log(len(users.Response))
 		t.Fatal("Should be able to correctly parse a user list")
 	}
 	if users.Response[0].Username != "icechest" {

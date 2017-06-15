@@ -227,12 +227,12 @@ func (gisqus *Gisqus) UserInteresting(ctx context.Context, values url.Values) (*
 /*
 UserActiveForums wraps https://disqus.com/api/docs/users/listActiveForums/ (https://disqus.com/api/3.0/users/listActiveForums.json)
 */
-func (gisqus *Gisqus) UserActiveForums(ctx context.Context, user string, values url.Values) (*ActiveForumsResponse, error) {
+func (gisqus *Gisqus) UserActiveForums(ctx context.Context, userID string, values url.Values) (*ActiveForumsResponse, error) {
 
-	if user == "" {
+	if userID == "" {
 		return nil, errors.New("Must provide a user id")
 	}
-	values.Set("user", user)
+	values.Set("user", userID)
 	values.Set("api_secret", gisqus.secret)
 	url := usersUrls.userActiveForums + "?" + values.Encode()
 
@@ -308,12 +308,12 @@ func (gisqus *Gisqus) UserFollowing(ctx context.Context, userID string, values u
 /*
 UserForumFollowing wraps https://disqus.com/api/docs/users/listFollowingForums/ (https://disqus.com/api/3.0/users/listFollowingForums.json)
 */
-func (gisqus *Gisqus) UserForumFollowing(ctx context.Context, user string, values url.Values) (*UserForumFollowingResponse, error) {
+func (gisqus *Gisqus) UserForumFollowing(ctx context.Context, userID string, values url.Values) (*UserForumFollowingResponse, error) {
 
-	if user == "" {
+	if userID == "" {
 		return nil, errors.New("Must provide a user id")
 	}
-	values.Set("user", user)
+	values.Set("user", userID)
 	values.Set("api_secret", gisqus.secret)
 	url := usersUrls.userFollowingForums + "?" + values.Encode()
 

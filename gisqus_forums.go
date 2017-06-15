@@ -36,13 +36,13 @@ var forumsUrls = ForumsURLS{
 /*
 ForumMostActiveUsers wraps https://disqus.com/api/docs/forums/listMostActiveUsers/ (https://disqus.com/api/3.0/forums/listMostActiveUsers.json)
 */
-func (gisqus *Gisqus) ForumMostActiveUsers(ctx context.Context, forum string, values url.Values) (*ForumUserListResponse, error) {
+func (gisqus *Gisqus) ForumMostActiveUsers(ctx context.Context, forumID string, values url.Values) (*ForumUserListResponse, error) {
 
-	if forum == "" {
+	if forumID == "" {
 		return nil, errors.New("Must provide a forum id")
 	}
 	values.Set("api_secret", gisqus.secret)
-	values.Set("forum", forum)
+	values.Set("forum", forumID)
 	url := forumsUrls.MostActiveUsersURL + "?" + values.Encode()
 
 	var fulr ForumUserListResponse
@@ -63,13 +63,13 @@ func (gisqus *Gisqus) ForumMostActiveUsers(ctx context.Context, forum string, va
 /*
 ForumFollowers wraps https://disqus.com/api/docs/forums/listFollowers/ (https://disqus.com/api/3.0/forums/listFollowers.json)
 */
-func (gisqus *Gisqus) ForumFollowers(ctx context.Context, forum string, values url.Values) (*ForumUserListResponse, error) {
+func (gisqus *Gisqus) ForumFollowers(ctx context.Context, forumID string, values url.Values) (*ForumUserListResponse, error) {
 
-	if forum == "" {
+	if forumID == "" {
 		return nil, errors.New("Must provide a forum id")
 	}
 	values.Set("api_secret", gisqus.secret)
-	values.Set("forum", forum)
+	values.Set("forum", forumID)
 	url := forumsUrls.ListFollowersURL + "?" + values.Encode()
 
 	var fulr ForumUserListResponse
@@ -90,13 +90,13 @@ func (gisqus *Gisqus) ForumFollowers(ctx context.Context, forum string, values u
 /*
 ForumUsers wraps https://disqus.com/api/3.0/forums/listUsers.json (https://disqus.com/api/docs/forums/listUsers/)
 */
-func (gisqus *Gisqus) ForumUsers(ctx context.Context, forum string, values url.Values) (*ForumUserListResponse, error) {
+func (gisqus *Gisqus) ForumUsers(ctx context.Context, forumID string, values url.Values) (*ForumUserListResponse, error) {
 
-	if forum == "" {
+	if forumID == "" {
 		return nil, errors.New("Must provide a forum id")
 	}
 	values.Set("api_secret", gisqus.secret)
-	values.Set("forum", forum)
+	values.Set("forum", forumID)
 	url := forumsUrls.ListUsersURL + "?" + values.Encode()
 
 	var fulr ForumUserListResponse
@@ -141,13 +141,13 @@ func (gisqus *Gisqus) ForumInteresting(ctx context.Context, values url.Values) (
 ForumDetails wraps https://disqus.com/api/docs/forums/details/ (https://disqus.com/api/3.0/forums/details.json)
 It does not support the "related" url parameter (other funcs can be used for drilldown)
 */
-func (gisqus *Gisqus) ForumDetails(ctx context.Context, forum string, values url.Values) (*ForumDetailsResponse, error) {
+func (gisqus *Gisqus) ForumDetails(ctx context.Context, forumID string, values url.Values) (*ForumDetailsResponse, error) {
 
-	if forum == "" {
+	if forumID == "" {
 		return nil, errors.New("Must provide a forum id")
 	}
 	values.Set("api_secret", gisqus.secret)
-	values.Set("forum", forum)
+	values.Set("forum", forumID)
 	url := forumsUrls.DetailsURL + "?" + values.Encode()
 
 	var fdr ForumDetailsResponse
@@ -167,12 +167,12 @@ func (gisqus *Gisqus) ForumDetails(ctx context.Context, forum string, values url
 /*
 ForumCategories wraps https://disqus.com/api/docs/forums/listCategories/ (https://disqus.com/api/3.0/forums/listCategories.json)
 */
-func (gisqus *Gisqus) ForumCategories(ctx context.Context, forum string, values url.Values) (*CategoriesListResponse, error) {
+func (gisqus *Gisqus) ForumCategories(ctx context.Context, forumID string, values url.Values) (*CategoriesListResponse, error) {
 
-	if forum == "" {
+	if forumID == "" {
 		return nil, errors.New("Must provide a forum id")
 	}
-	values.Set("forum", forum)
+	values.Set("forum", forumID)
 	values.Set("api_secret", gisqus.secret)
 	url := forumsUrls.CategoriesURL + "?" + values.Encode()
 
@@ -188,12 +188,12 @@ func (gisqus *Gisqus) ForumCategories(ctx context.Context, forum string, values 
 /*
 ForumThreads wraps https://disqus.com/api/docs/forums/listThreads/ (https://disqus.com/api/3.0/forums/listThreads.json)
 */
-func (gisqus *Gisqus) ForumThreads(ctx context.Context, forum string, values url.Values) (*ThreadListResponse, error) {
+func (gisqus *Gisqus) ForumThreads(ctx context.Context, forumID string, values url.Values) (*ThreadListResponse, error) {
 
-	if forum == "" {
+	if forumID == "" {
 		return nil, errors.New("Must provide a forum id")
 	}
-	values.Set("forum", forum)
+	values.Set("forum", forumID)
 	values.Set("api_secret", gisqus.secret)
 	url := forumsUrls.ListThreadsURL + "?" + values.Encode()
 
@@ -217,13 +217,13 @@ func (gisqus *Gisqus) ForumThreads(ctx context.Context, forum string, values url
 ForumMostLikedUsers wraps https://disqus.com/api/docs/forums/listMostLikedUsers/ (https://disqus.com/api/3.0/forums/listMostLikedUsers.json)
 Disque does not return the # of likes with this call.
 */
-func (gisqus *Gisqus) ForumMostLikedUsers(ctx context.Context, forum string, values url.Values) (*MostLikedUsersResponse, error) {
+func (gisqus *Gisqus) ForumMostLikedUsers(ctx context.Context, forumID string, values url.Values) (*MostLikedUsersResponse, error) {
 
-	if forum == "" {
+	if forumID == "" {
 		return nil, errors.New("Must provide a forum id")
 	}
 	values.Set("api_secret", gisqus.secret)
-	values.Set("forum", forum)
+	values.Set("forum", forumID)
 	url := forumsUrls.MostLikedUsersURL + "?" + values.Encode()
 
 	var mlur MostLikedUsersResponse

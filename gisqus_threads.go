@@ -37,12 +37,12 @@ var threadsUrls = ThreadsURLS{
 ThreadUsersVoted wraps https://disqus.com/api/docs/threads/listUsersVotedThread/ (https://disqus.com/api/3.0/threads/listUsersVotedThread.json)
 Complete users are not returned by Disqus on this call
 */
-func (gisqus *Gisqus) ThreadUsersVoted(ctx context.Context, thread string, values url.Values) (*UsersVotedResponse, error) {
+func (gisqus *Gisqus) ThreadUsersVoted(ctx context.Context, threadD string, values url.Values) (*UsersVotedResponse, error) {
 
-	if thread == "" {
+	if threadD == "" {
 		return nil, errors.New("Must provide a thread id")
 	}
-	values.Set("thread", thread)
+	values.Set("thread", threadD)
 	values.Set("api_secret", gisqus.secret)
 	url := threadsUrls.ThreadUsersVotedURL + "?" + values.Encode()
 
@@ -127,12 +127,12 @@ func (gisqus *Gisqus) ThreadTrending(ctx context.Context, values url.Values) (*T
 /*
 ThreadSet wraps https://disqus.com/api/docs/threads/set/ (https://disqus.com/api/3.0/threads/set.json)
 */
-func (gisqus *Gisqus) ThreadSet(ctx context.Context, threads []string, values url.Values) (*ThreadListResponseNoCursor, error) {
+func (gisqus *Gisqus) ThreadSet(ctx context.Context, threadsIDs []string, values url.Values) (*ThreadListResponseNoCursor, error) {
 
-	if threads == nil || len(threads) == 0 {
+	if threadsIDs == nil || len(threadsIDs) == 0 {
 		return nil, errors.New("Must provide one or more thread ids")
 	}
-	for _, thread := range threads {
+	for _, thread := range threadsIDs {
 		values.Add("thread", thread)
 	}
 	values.Set("api_secret", gisqus.secret)
@@ -185,12 +185,12 @@ func (gisqus *Gisqus) ThreadDetails(ctx context.Context, threadID string, values
 ThreadPosts wraps https://disqus.com/api/docs/threads/listPosts/ (https://disqus.com/api/3.0/threads/listPosts.json)
 It does not support the "related" argument (related fields can be gotten with calls to their respective APIS)
 */
-func (gisqus *Gisqus) ThreadPosts(ctx context.Context, thread string, values url.Values) (*PostListResponse, error) {
+func (gisqus *Gisqus) ThreadPosts(ctx context.Context, threadID string, values url.Values) (*PostListResponse, error) {
 
-	if thread == "" {
+	if threadID == "" {
 		return nil, errors.New("Must provide a thread id")
 	}
-	values.Set("thread", thread)
+	values.Set("thread", threadID)
 	values.Set("api_secret", gisqus.secret)
 	url := threadsUrls.ThreadPostsURL + "?" + values.Encode()
 
