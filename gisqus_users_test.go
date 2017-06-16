@@ -167,7 +167,7 @@ func TestMostActiveForums(t *testing.T) {
 
 func TestUserActivities(t *testing.T) {
 
-	_, testErr = testGisqus.UserDetails(testCtx, "", testValues)
+	_, testErr = testGisqus.UserActivities(testCtx, "", testValues)
 	if testErr == nil {
 		t.Fatal("Should check for an empty user id")
 	}
