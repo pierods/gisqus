@@ -215,7 +215,7 @@ func (gisqus *Gisqus) ForumThreads(ctx context.Context, forumID string, values u
 
 /*
 ForumMostLikedUsers wraps https://disqus.com/api/docs/forums/listMostLikedUsers/ (https://disqus.com/api/3.0/forums/listMostLikedUsers.json)
-Disque does not return the # of likes with this call.
+Disqus does not return the # of likes with this call.
 */
 func (gisqus *Gisqus) ForumMostLikedUsers(ctx context.Context, forumID string, values url.Values) (*MostLikedUsersResponse, error) {
 
