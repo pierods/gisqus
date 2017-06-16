@@ -5,7 +5,6 @@ package gisqus
 
 import (
 	"fmt"
-	"net/url"
 	"os"
 	"testing"
 )
@@ -47,8 +46,6 @@ func init() {
 
 func TestPostDetails(t *testing.T) {
 
-	testValues = url.Values{}
-
 	_, testErr = testGisqus.PostDetails(testCtx, "", testValues)
 	if testErr == nil {
 		t.Fatal("Should check for an empty post id")
@@ -82,9 +79,7 @@ func TestPostDetails(t *testing.T) {
 
 func TestPostList(t *testing.T) {
 
-	values := url.Values{}
-
-	posts, err := testGisqus.PostList(testCtx, values)
+	posts, err := testGisqus.PostList(testCtx, testValues)
 	if err != nil {
 		t.Fatal("Should be able to call the post list endpoint - ", err)
 	}
@@ -117,9 +112,7 @@ func TestPostList(t *testing.T) {
 
 func TestPostPopular(t *testing.T) {
 
-	values := url.Values{}
-
-	posts, err := testGisqus.PostPopular(testCtx, values)
+	posts, err := testGisqus.PostPopular(testCtx, testValues)
 	if err != nil {
 		t.Fatal("Should be able to call the post popular endpoint - ", err)
 	}

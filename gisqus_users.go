@@ -14,27 +14,27 @@ import (
 
 // UsersURLS are the URLs used by Disqus' user endpoints
 type UsersURLS struct {
-	userDetailURL            string
-	userInterestingIUsersURL string
-	userPostListURL          string
-	userActiveForums         string
-	userFollowers            string
-	userFollowing            string
-	userFollowingForums      string
-	listActivityURL          string
-	mostActiveForumsURL      string
+	DetailURL            string
+	InterestingIUsersURL string
+	PostListURL          string
+	ActiveForumsURL      string
+	FollowersURL         string
+	FollowingURL         string
+	FollowingForumsURL   string
+	ActivityURL          string
+	MostActiveForumsURL  string
 }
 
 var usersUrls = UsersURLS{
-	userDetailURL:            "https://disqus.com/api/3.0/users/details.json",
-	userInterestingIUsersURL: "https://disqus.com/api/3.0/users/interestingUsers.json",
-	userPostListURL:          "https://disqus.com/api/3.0/users/listPosts.json",
-	userActiveForums:         "https://disqus.com/api/3.0/users/listActiveForums.json",
-	userFollowers:            "https://disqus.com/api/3.0/users/listFollowers.json",
-	userFollowing:            "https://disqus.com/api/3.0/users/listFollowing.json",
-	userFollowingForums:      "https://disqus.com/api/3.0/users/listFollowingForums.json",
-	listActivityURL:          "https://disqus.com/api/3.0/users/listActivity.json",
-	mostActiveForumsURL:      "https://disqus.com/api/3.0/users/listMostActiveForums.json",
+	DetailURL:            "https://disqus.com/api/3.0/users/details.json",
+	InterestingIUsersURL: "https://disqus.com/api/3.0/users/interestingUsers.json",
+	PostListURL:          "https://disqus.com/api/3.0/users/listPosts.json",
+	ActiveForumsURL:      "https://disqus.com/api/3.0/users/listActiveForums.json",
+	FollowersURL:         "https://disqus.com/api/3.0/users/listFollowers.json",
+	FollowingURL:         "https://disqus.com/api/3.0/users/listFollowing.json",
+	FollowingForumsURL:   "https://disqus.com/api/3.0/users/listFollowingForums.json",
+	ActivityURL:          "https://disqus.com/api/3.0/users/listActivity.json",
+	MostActiveForumsURL:  "https://disqus.com/api/3.0/users/listMostActiveForums.json",
 }
 
 type activityResponseRaw struct {
@@ -65,7 +65,7 @@ func (gisqus *Gisqus) UserActivities(ctx context.Context, userID string, values 
 	values.Set("user", userID)
 	values.Set("related", "")
 
-	url := usersUrls.listActivityURL + "?" + values.Encode()
+	url := usersUrls.ActivityURL + "?" + values.Encode()
 
 	var arr activityResponseRaw
 
@@ -125,7 +125,7 @@ func (gisqus *Gisqus) UserMostActiveForums(ctx context.Context, userID string, v
 	}
 	values.Set("api_secret", gisqus.secret)
 	values.Set("user", userID)
-	url := usersUrls.mostActiveForumsURL + "?" + values.Encode()
+	url := usersUrls.MostActiveForumsURL + "?" + values.Encode()
 
 	var mafr MostActiveForumsResponse
 
@@ -154,7 +154,7 @@ func (gisqus *Gisqus) UserPosts(ctx context.Context, userID string, values url.V
 	}
 	values.Set("api_secret", gisqus.secret)
 	values.Set("user", userID)
-	url := usersUrls.userPostListURL + "?" + values.Encode()
+	url := usersUrls.PostListURL + "?" + values.Encode()
 
 	var plr PostListResponse
 
@@ -187,7 +187,7 @@ func (gisqus *Gisqus) UserDetails(ctx context.Context, userID string, values url
 		return nil, errors.New("Must provide a user id")
 	}
 	values.Set("api_secret", gisqus.secret)
-	url := usersUrls.userDetailURL + "?" + values.Encode()
+	url := usersUrls.DetailURL + "?" + values.Encode()
 	var udr UserDetailsResponse
 	err := gisqus.callAndInflate(ctx, url, &udr)
 	if err != nil {
@@ -207,7 +207,7 @@ UserInteresting wraps https://disqus.com/api/docs/users/interestingUsers/ (https
 func (gisqus *Gisqus) UserInteresting(ctx context.Context, values url.Values) (*InterestingUsersResponse, error) {
 
 	values.Set("api_secret", gisqus.secret)
-	url := usersUrls.userInterestingIUsersURL + "?" + values.Encode()
+	url := usersUrls.InterestingIUsersURL + "?" + values.Encode()
 	var iur InterestingUsersResponse
 
 	err := gisqus.callAndInflate(ctx, url, &iur)
@@ -234,7 +234,7 @@ func (gisqus *Gisqus) UserActiveForums(ctx context.Context, userID string, value
 	}
 	values.Set("user", userID)
 	values.Set("api_secret", gisqus.secret)
-	url := usersUrls.userActiveForums + "?" + values.Encode()
+	url := usersUrls.ActiveForumsURL + "?" + values.Encode()
 
 	var afr ActiveForumsResponse
 	err := gisqus.callAndInflate(ctx, url, &afr)
@@ -261,7 +261,7 @@ func (gisqus *Gisqus) UserFollowers(ctx context.Context, userID string, values u
 	}
 	values.Set("user", userID)
 	values.Set("api_secret", gisqus.secret)
-	url := usersUrls.userFollowers + "?" + values.Encode()
+	url := usersUrls.FollowersURL + "?" + values.Encode()
 	var fr UserListResponse
 
 	err := gisqus.callAndInflate(ctx, url, &fr)
@@ -288,7 +288,7 @@ func (gisqus *Gisqus) UserFollowing(ctx context.Context, userID string, values u
 	}
 	values.Set("user", userID)
 	values.Set("api_secret", gisqus.secret)
-	url := usersUrls.userFollowing + "?" + values.Encode()
+	url := usersUrls.FollowingURL + "?" + values.Encode()
 	var fr UserListResponse
 
 	err := gisqus.callAndInflate(ctx, url, &fr)
@@ -315,7 +315,7 @@ func (gisqus *Gisqus) UserForumFollowing(ctx context.Context, userID string, val
 	}
 	values.Set("user", userID)
 	values.Set("api_secret", gisqus.secret)
-	url := usersUrls.userFollowingForums + "?" + values.Encode()
+	url := usersUrls.FollowingForumsURL + "?" + values.Encode()
 
 	var uffr UserForumFollowingResponse
 	err := gisqus.callAndInflate(ctx, url, &uffr)

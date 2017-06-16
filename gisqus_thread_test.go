@@ -5,7 +5,6 @@ package gisqus
 
 import (
 	"fmt"
-	"net/url"
 	"os"
 	"testing"
 )
@@ -97,8 +96,6 @@ func init() {
 
 func TestThreadUsersVoted(t *testing.T) {
 
-	testValues = url.Values{}
-
 	_, testErr = testGisqus.ThreadDetails(testCtx, "", testValues)
 	if testErr == nil {
 		t.Fatal("Should check for an empty thread id")
@@ -126,8 +123,6 @@ func TestThreadUsersVoted(t *testing.T) {
 }
 
 func TestThreadSet(t *testing.T) {
-
-	testValues = url.Values{}
 
 	_, testErr = testGisqus.ThreadSet(testCtx, []string{}, testValues)
 	if testErr == nil {
@@ -169,7 +164,6 @@ func TestThreadSet(t *testing.T) {
 
 func TestThreadList(t *testing.T) {
 
-	testValues = url.Values{}
 	threads, err := testGisqus.ThreadList(testCtx, testValues)
 	if err != nil {
 		t.Fatal("Should be able to call the thread list endpoint - ", err)
@@ -202,8 +196,6 @@ func TestThreadList(t *testing.T) {
 
 func TestThreadDetails(t *testing.T) {
 
-	testValues = url.Values{}
-
 	_, testErr = testGisqus.ThreadDetails(testCtx, "", testValues)
 	if testErr == nil {
 		t.Fatal("Should check for an empty thread id")
@@ -234,7 +226,6 @@ func TestThreadDetails(t *testing.T) {
 
 func TestThreadPosts(t *testing.T) {
 
-	testValues = url.Values{}
 	_, testErr = testGisqus.ThreadPosts(testCtx, "", testValues)
 	if testErr == nil {
 		t.Fatal("Should check for empty thread id")
@@ -272,7 +263,6 @@ func TestThreadPosts(t *testing.T) {
 
 func TestThreadListHot(t *testing.T) {
 
-	testValues = url.Values{}
 	threads, err := testGisqus.ThreadHot(testCtx, testValues)
 	if err != nil {
 		t.Fatal("Should be able to call the thread list endpoint - ", err)
@@ -305,8 +295,7 @@ func TestThreadListHot(t *testing.T) {
 
 func TestThreadListPopular(t *testing.T) {
 
-	values := url.Values{}
-	threads, err := testGisqus.ThreadPopular(testCtx, values)
+	threads, err := testGisqus.ThreadPopular(testCtx, testValues)
 	if err != nil {
 		t.Fatal("Should be able to call the thread list popular endpoint - ", err)
 	}
@@ -338,7 +327,6 @@ func TestThreadListPopular(t *testing.T) {
 
 func TestThreadListTrending(t *testing.T) {
 
-	testValues = url.Values{}
 	trends, err := testGisqus.ThreadTrending(testCtx, testValues)
 	if err != nil {
 		t.Fatal("Should be able to call the thread trending endpoint - ", err)

@@ -21,6 +21,7 @@ var testValues url.Values
 var testDataDir string
 
 func init() {
+	testValues = url.Values{}
 	testGisqus = NewGisqus("secret")
 	testCtx, _ = context.WithCancel(context.TODO())
 	mockServer = mock.NewMockServer()

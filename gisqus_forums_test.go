@@ -5,7 +5,6 @@ package gisqus
 
 import (
 	"fmt"
-	"net/url"
 	"os"
 	"testing"
 )
@@ -104,7 +103,6 @@ func init() {
 
 func TestForumMostActiveUsers(t *testing.T) {
 
-	testValues = url.Values{}
 	_, testErr = testGisqus.ForumMostActiveUsers(testCtx, "", testValues)
 	if testErr == nil {
 		t.Fatal("Should be able to reject a null forum")
@@ -136,7 +134,6 @@ func TestForumMostActiveUsers(t *testing.T) {
 
 func TestForumFollowers(t *testing.T) {
 
-	testValues = url.Values{}
 	_, testErr = testGisqus.ForumFollowers(testCtx, "", testValues)
 	if testErr == nil {
 		t.Fatal("Should be able to reject a null forum")
@@ -168,7 +165,6 @@ func TestForumFollowers(t *testing.T) {
 
 func TestForumUsers(t *testing.T) {
 
-	testValues = url.Values{}
 	_, testErr = testGisqus.ForumUsers(testCtx, "", testValues)
 	if testErr == nil {
 		t.Fatal("Should be able to reject a null forum")
@@ -199,7 +195,6 @@ func TestForumUsers(t *testing.T) {
 
 func TestForumsInteresting(t *testing.T) {
 
-	testValues = url.Values{}
 	interestingForums, err := testGisqus.ForumInteresting(testCtx, testValues)
 	if err != nil {
 		t.Fatal(err)
@@ -239,7 +234,6 @@ func TestForumsInteresting(t *testing.T) {
 
 func TestForumDetails(t *testing.T) {
 
-	testValues = url.Values{}
 	_, testErr = testGisqus.ForumDetails(testCtx, "", testValues)
 	if testErr == nil {
 		t.Fatal("Should check for an empty forum id")
@@ -264,7 +258,6 @@ func TestForumDetails(t *testing.T) {
 
 func TestForumCategories(t *testing.T) {
 
-	testValues = url.Values{}
 	_, testErr = testGisqus.ForumCategories(testCtx, "", testValues)
 	if testErr == nil {
 		t.Fatal("Should check for an empty forum id")
@@ -287,7 +280,6 @@ func TestForumCategories(t *testing.T) {
 
 func TestForumThreads(t *testing.T) {
 
-	testValues = url.Values{}
 	_, testErr = testGisqus.ForumThreads(testCtx, "", testValues)
 	if testErr == nil {
 		t.Fatal("Should check for an empty forum id")
@@ -324,7 +316,6 @@ func TestForumThreads(t *testing.T) {
 
 func TestForumMostLikedUsers(t *testing.T) {
 
-	testValues = url.Values{}
 	_, testErr = testGisqus.ForumMostLikedUsers(testCtx, "", testValues)
 	if testErr == nil {
 		t.Fatal("Should be able to reject a null forum")
@@ -350,7 +341,6 @@ func TestForumMostLikedUsers(t *testing.T) {
 
 func TestRetrieveCursor(t *testing.T) {
 
-	testValues = url.Values{}
 	users, err := testGisqus.ForumUsers(testCtx, "mapleleafshotstove", testValues)
 	if err != nil {
 		t.Fatal("Should be able to call the forum list users endpoint - ", err)
