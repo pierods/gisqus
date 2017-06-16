@@ -142,7 +142,7 @@ func TestUserPosts(t *testing.T) {
 
 func TestMostActiveForums(t *testing.T) {
 
-	_, testErr = testGisqus.UserDetails(testCtx, "", testValues)
+	_, testErr = testGisqus.UserMostActiveForums(testCtx, "", testValues)
 	if testErr == nil {
 		t.Fatal("Should check for an empty user id")
 	}
@@ -161,7 +161,6 @@ func TestMostActiveForums(t *testing.T) {
 		t.Fatal("Should be able to retrieve an organization id")
 	}
 	if !forums.Response[0].Settings.OrganicDiscoveryEnabled {
-		t.Log(forums.Response[0].Settings.MustVerifyEmail)
 		t.Fatal("Should be able to retrieve organicDiscoveryEnabled")
 	}
 }
