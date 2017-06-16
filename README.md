@@ -25,7 +25,7 @@ After having obtained an API key from Disqus (you must create an app for that on
     import  "net/url"
     import  "github.com/pierods/gisqus"
     ...
-    g = NewGisqus("api key")
+    g := NewGisqus("api key")
     values := url.Values{}
     ctx, cancel := context.WithCancel(context.TODO())
 ```
