@@ -5,6 +5,7 @@ package gisqus
 
 import (
 	"context"
+	"fmt"
 	"io/ioutil"
 	"net/url"
 	"os"
@@ -38,19 +39,21 @@ func TestMain(m *testing.M) {
 	os.Exit(retCode)
 }
 
-func readTestFile(fileName string) (string, error) {
+func readTestFile(fileName string) string {
 
 	f, err := os.Open(testDataDir + fileName)
 	defer f.Close()
 
 	if err != nil {
-		return "", err
+		fmt.Println(err)
+		os.Exit(-1)
 	}
 	bytes, err := ioutil.ReadAll(f)
 	if err != nil {
-		return "", err
+		fmt.Println(err)
+		os.Exit(-1)
 	}
 
-	return string(bytes), nil
+	return string(bytes)
 
 }

@@ -11,87 +11,32 @@ import (
 
 func init() {
 
-	var err error
-	threadSetJSON, err := readTestFile("threadsset.json")
-	if err != nil {
-		fmt.Println(err)
-		os.Exit(-1)
+	threadSetJSON := readTestFile("threadsset.json")
+	threadUsersVotedJSON := readTestFile("threadsusersvoted.json")
+	threadListJSON := readTestFile("threadsthreadlist.json")
+	threadDetailsJSON := readTestFile("threadsthreaddetails.json")
+	threadPostsJSON := readTestFile("threadsthreadposts.json")
+	threadListHotJSON := readTestFile("threadshotlist.json")
+	threadListPopularJSON := readTestFile("threadspopular.json")
+	threadListTrendingJSON := readTestFile("threadstrending.json")
+
+	switchHS := func(URL, JSON string) string {
+		result, err := mockServer.SwitchHostAndScheme(URL, JSON)
+		if err != nil {
+			fmt.Println(err)
+			os.Exit(-1)
+		}
+		return result
 	}
-	threadUsersVotedJSON, err := readTestFile("threadsusersvoted.json")
-	if err != nil {
-		fmt.Println(err)
-		os.Exit(-1)
-	}
-	threadListJSON, err := readTestFile("threadsthreadlist.json")
-	if err != nil {
-		fmt.Println(err)
-		os.Exit(-1)
-	}
-	threadDetailsJSON, err := readTestFile("threadsthreaddetails.json")
-	if err != nil {
-		fmt.Println(err)
-		os.Exit(-1)
-	}
-	threadPostsJSON, err := readTestFile("threadsthreadposts.json")
-	if err != nil {
-		fmt.Println(err)
-		os.Exit(-1)
-	}
-	threadListHotJSON, err := readTestFile("threadshotlist.json")
-	if err != nil {
-		fmt.Println(err)
-		os.Exit(-1)
-	}
-	threadListPopularJSON, err := readTestFile("threadspopular.json")
-	if err != nil {
-		fmt.Println(err)
-		os.Exit(-1)
-	}
-	threadListTrendingJSON, err := readTestFile("threadstrending.json")
-	if err != nil {
-		fmt.Println(err)
-		os.Exit(-1)
-	}
-	threadsUrls.ThreadUsersVotedURL, testErr = mockServer.SwitchHostAndScheme(threadsUrls.ThreadUsersVotedURL, threadUsersVotedJSON)
-	if testErr != nil {
-		fmt.Println(err)
-		os.Exit(-1)
-	}
-	threadsUrls.ThreadSetURL, testErr = mockServer.SwitchHostAndScheme(threadsUrls.ThreadSetURL, threadSetJSON)
-	if testErr != nil {
-		fmt.Println(err)
-		os.Exit(-1)
-	}
-	threadsUrls.ThreadListURL, testErr = mockServer.SwitchHostAndScheme(threadsUrls.ThreadListURL, threadListJSON)
-	if testErr != nil {
-		fmt.Println(err)
-		os.Exit(-1)
-	}
-	threadsUrls.ThreadDetailURL, testErr = mockServer.SwitchHostAndScheme(threadsUrls.ThreadDetailURL, threadDetailsJSON)
-	if testErr != nil {
-		fmt.Println(err)
-		os.Exit(-1)
-	}
-	threadsUrls.ThreadPostsURL, testErr = mockServer.SwitchHostAndScheme(threadsUrls.ThreadPostsURL, threadPostsJSON)
-	if testErr != nil {
-		fmt.Println(err)
-		os.Exit(-1)
-	}
-	threadsUrls.ThreadHotURL, testErr = mockServer.SwitchHostAndScheme(threadsUrls.ThreadHotURL, threadListHotJSON)
-	if testErr != nil {
-		fmt.Println(err)
-		os.Exit(-1)
-	}
-	threadsUrls.ThreadPopularURL, testErr = mockServer.SwitchHostAndScheme(threadsUrls.ThreadPopularURL, threadListPopularJSON)
-	if testErr != nil {
-		fmt.Println(err)
-		os.Exit(-1)
-	}
-	threadsUrls.ThreadTrendingURL, testErr = mockServer.SwitchHostAndScheme(threadsUrls.ThreadTrendingURL, threadListTrendingJSON)
-	if testErr != nil {
-		fmt.Println(err)
-		os.Exit(-1)
-	}
+
+	threadsUrls.ThreadUsersVotedURL = switchHS(threadsUrls.ThreadUsersVotedURL, threadUsersVotedJSON)
+	threadsUrls.ThreadSetURL = switchHS(threadsUrls.ThreadSetURL, threadSetJSON)
+	threadsUrls.ThreadListURL = switchHS(threadsUrls.ThreadListURL, threadListJSON)
+	threadsUrls.ThreadDetailURL = switchHS(threadsUrls.ThreadDetailURL, threadDetailsJSON)
+	threadsUrls.ThreadPostsURL = switchHS(threadsUrls.ThreadPostsURL, threadPostsJSON)
+	threadsUrls.ThreadHotURL = switchHS(threadsUrls.ThreadHotURL, threadListHotJSON)
+	threadsUrls.ThreadPopularURL = switchHS(threadsUrls.ThreadPopularURL, threadListPopularJSON)
+	threadsUrls.ThreadTrendingURL = switchHS(threadsUrls.ThreadTrendingURL, threadListTrendingJSON)
 }
 
 func TestThreadUsersVoted(t *testing.T) {

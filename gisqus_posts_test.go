@@ -11,37 +11,22 @@ import (
 
 func init() {
 
-	var err error
-	postPopularJSON, err := readTestFile("postspostpopular.json")
-	if err != nil {
-		fmt.Println(err)
-		os.Exit(-1)
-	}
-	postDetailsJSON, err := readTestFile("postspostdetails.json")
-	if err != nil {
-		fmt.Println(err)
-		os.Exit(-1)
-	}
-	postListJSON, err := readTestFile("postspostlist.json")
-	if err != nil {
-		fmt.Println(err)
-		os.Exit(-1)
+	postPopularJSON := readTestFile("postspostpopular.json")
+	postDetailsJSON := readTestFile("postspostdetails.json")
+	postListJSON := readTestFile("postspostlist.json")
+
+	switchHS := func(URL, JSON string) string {
+		result, err := mockServer.SwitchHostAndScheme(URL, JSON)
+		if err != nil {
+			fmt.Println(err)
+			os.Exit(-1)
+		}
+		return result
 	}
 
-	postsUrls.PostDetailsURL, testErr = mockServer.SwitchHostAndScheme(postsUrls.PostDetailsURL, postDetailsJSON)
-	if testErr != nil {
-		os.Exit(-1)
-	}
-
-	postsUrls.PostListURL, testErr = mockServer.SwitchHostAndScheme(postsUrls.PostListURL, postListJSON)
-	if testErr != nil {
-		os.Exit(-1)
-	}
-	postsUrls.PostPopularURL, testErr = mockServer.SwitchHostAndScheme(postsUrls.PostPopularURL, postPopularJSON)
-	if testErr != nil {
-		os.Exit(-1)
-	}
-
+	postsUrls.PostDetailsURL = switchHS(postsUrls.PostDetailsURL, postDetailsJSON)
+	postsUrls.PostListURL = switchHS(postsUrls.PostListURL, postListJSON)
+	postsUrls.PostPopularURL = switchHS(postsUrls.PostPopularURL, postPopularJSON)
 }
 
 func TestPostDetails(t *testing.T) {

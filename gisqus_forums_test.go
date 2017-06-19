@@ -11,22 +11,14 @@ import (
 
 func init() {
 
-	read := func(fileName string) string {
-		result, err := readTestFile(fileName)
-		if err != nil {
-			fmt.Println(err)
-			os.Exit(-1)
-		}
-		return result
-	}
-	forumInterestingForumsJSON := read("forumsinterestingforums.json")
-	forumMostActiveUsersJSON := read("forumslistmostactive.json")
-	forumListUsersJSON := read("forumslistforumusers.json")
-	forumDetailsJSON := read("forumsforumdetails.json")
-	forumListCategoriesJSON := read("forumslistcategories.json")
-	forumThreadListJSON := read("forumsforumlistthreads.json")
-	forumMostLikedUsersJSON := read("forumsmostlikedusers.json")
-	forumFollowersJSON := read("forumslistfollowers.json")
+	forumInterestingForumsJSON := readTestFile("forumsinterestingforums.json")
+	forumMostActiveUsersJSON := readTestFile("forumslistmostactive.json")
+	forumListUsersJSON := readTestFile("forumslistforumusers.json")
+	forumDetailsJSON := readTestFile("forumsforumdetails.json")
+	forumListCategoriesJSON := readTestFile("forumslistcategories.json")
+	forumThreadListJSON := readTestFile("forumsforumlistthreads.json")
+	forumMostLikedUsersJSON := readTestFile("forumsmostlikedusers.json")
+	forumFollowersJSON := readTestFile("forumslistfollowers.json")
 
 	switchHS := func(URL, JSON string) string {
 		result, err := mockServer.SwitchHostAndScheme(URL, JSON)
