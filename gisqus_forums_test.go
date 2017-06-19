@@ -11,94 +11,41 @@ import (
 
 func init() {
 
-	var err error
+	read := func(fileName string) string {
+		result, err := readTestFile(fileName)
+		if err != nil {
+			fmt.Println(err)
+			os.Exit(-1)
+		}
+		return result
+	}
+	forumInterestingForumsJSON := read("forumsinterestingforums.json")
+	forumMostActiveUsersJSON := read("forumslistmostactive.json")
+	forumListUsersJSON := read("forumslistforumusers.json")
+	forumDetailsJSON := read("forumsforumdetails.json")
+	forumListCategoriesJSON := read("forumslistcategories.json")
+	forumThreadListJSON := read("forumsforumlistthreads.json")
+	forumMostLikedUsersJSON := read("forumsmostlikedusers.json")
+	forumFollowersJSON := read("forumslistfollowers.json")
 
-	forumInterestingForumsJSON, err := readTestFile("forumsinterestingforums.json")
-	if err != nil {
-		fmt.Println(err)
-		os.Exit(-1)
-	}
-	forumMostActiveUsersJSON, err := readTestFile("forumslistmostactive.json")
-	if err != nil {
-		fmt.Println(err)
-		os.Exit(-1)
+	switchHS := func(URL, JSON string) string {
+		result, err := mockServer.SwitchHostAndScheme(URL, JSON)
+		if err != nil {
+			fmt.Println(err)
+			os.Exit(-1)
+		}
+		return result
 	}
 
-	forumListUsersJSON, err := readTestFile("forumslistforumusers.json")
-	if err != nil {
-		fmt.Println(err)
-		os.Exit(-1)
-	}
-	forumDetailsJSON, err := readTestFile("forumsforumdetails.json")
-	if err != nil {
-		fmt.Println(err)
-		os.Exit(-1)
-	}
-	forumListCategoriesJSON, err := readTestFile("forumslistcategories.json")
-	if err != nil {
-		fmt.Println(err)
-		os.Exit(-1)
-	}
-	forumThreadListJSON, err := readTestFile("forumsforumlistthreads.json")
-	if err != nil {
-		fmt.Println(err)
-		os.Exit(-1)
-	}
-	forumMostLikedUsersJSON, err := readTestFile("forumsmostlikedusers.json")
-	if err != nil {
-		fmt.Println(err)
-		os.Exit(-1)
-	}
-	forumFollowersJSON, err := readTestFile("forumslistfollowers.json")
-	if err != nil {
-		fmt.Println(err)
-		os.Exit(-1)
-	}
-	forumsUrls.MostActiveUsersURL, testErr = mockServer.SwitchHostAndScheme(forumsUrls.MostActiveUsersURL, forumMostActiveUsersJSON)
-	if testErr != nil {
-		fmt.Println(err)
-		os.Exit(-1)
-	}
-	forumsUrls.ListFollowersURL, testErr = mockServer.SwitchHostAndScheme(forumsUrls.ListFollowersURL, forumFollowersJSON)
-	if testErr != nil {
-		fmt.Println(err)
-		os.Exit(-1)
-	}
-	forumsUrls.ListUsersURL, testErr = mockServer.SwitchHostAndScheme(forumsUrls.ListUsersURL, forumListUsersJSON)
-	if testErr != nil {
-		fmt.Println(err)
-		os.Exit(-1)
-	}
-	forumsUrls.InterestingForumsURL, testErr = mockServer.SwitchHostAndScheme(forumsUrls.InterestingForumsURL, forumInterestingForumsJSON)
-	if testErr != nil {
-		fmt.Println(err)
-		os.Exit(-1)
-	}
-	forumsUrls.DetailsURL, testErr = mockServer.SwitchHostAndScheme(forumsUrls.DetailsURL, forumDetailsJSON)
-	if testErr != nil {
-		fmt.Println(err)
-		os.Exit(-1)
-	}
-	forumsUrls.CategoriesURL, testErr = mockServer.SwitchHostAndScheme(forumsUrls.CategoriesURL, forumListCategoriesJSON)
-	if testErr != nil {
-		fmt.Println(err)
-		os.Exit(-1)
-	}
-	forumsUrls.ListThreadsURL, testErr = mockServer.SwitchHostAndScheme(forumsUrls.ListThreadsURL, forumThreadListJSON)
-	if testErr != nil {
-		fmt.Println(err)
-		os.Exit(-1)
-	}
-	forumsUrls.MostLikedUsersURL, testErr = mockServer.SwitchHostAndScheme(forumsUrls.MostLikedUsersURL, forumMostLikedUsersJSON)
-	if testErr != nil {
-		fmt.Println(err)
-		os.Exit(-1)
-	}
-	forumsUrls.ListUsersURL, testErr = mockServer.SwitchHostAndScheme(forumsUrls.ListUsersURL, forumListUsersJSON)
-	if testErr != nil {
-		fmt.Println(err)
-		os.Exit(-1)
-	}
+	forumsUrls.MostActiveUsersURL = switchHS(forumsUrls.MostActiveUsersURL, forumMostActiveUsersJSON)
+	forumsUrls.ListFollowersURL = switchHS(forumsUrls.ListFollowersURL, forumFollowersJSON)
+	forumsUrls.ListUsersURL = switchHS(forumsUrls.ListUsersURL, forumListUsersJSON)
+	forumsUrls.InterestingForumsURL = switchHS(forumsUrls.InterestingForumsURL, forumInterestingForumsJSON)
+	forumsUrls.DetailsURL = switchHS(forumsUrls.DetailsURL, forumDetailsJSON)
+	forumsUrls.CategoriesURL = switchHS(forumsUrls.CategoriesURL, forumListCategoriesJSON)
+	forumsUrls.ListThreadsURL = switchHS(forumsUrls.ListThreadsURL, forumThreadListJSON)
+	forumsUrls.MostLikedUsersURL = switchHS(forumsUrls.MostLikedUsersURL, forumMostLikedUsersJSON)
+	forumsUrls.ListUsersURL = switchHS(forumsUrls.ListUsersURL, forumListUsersJSON)
 }
 
 func TestForumMostActiveUsers(t *testing.T) {
