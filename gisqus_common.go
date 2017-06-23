@@ -13,7 +13,10 @@ import (
 	"time"
 )
 
+// DisqusDateFormat is a constant used to export dates in a format accepted by Disqus
 const DisqusDateFormat = "2006-01-02T15:04:05"
+
+// DisqusDateFormatExact is a constant used to export dates in a format accepted by Disqus
 const DisqusDateFormatExact = "2006-01-02T15:04:05.000000"
 
 var zeroDate time.Time

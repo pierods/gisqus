@@ -151,9 +151,12 @@ type InterestingItem struct {
 	ID     string `json:"id"`
 }
 
+// Filter represents the possible values for filter in calls to Disqus'API
+type Filter int
+
 // Post constants are used by Disqus in API calls in the "filters" parameter
 const (
-	PostIsAnonymous = 1 + iota
+	PostIsAnonymous Filter = 1 + iota
 	PostHasLink
 	PostHasLowRepAuthor
 	PostHasBadWord
@@ -161,36 +164,48 @@ const (
 	PostNoIssue
 )
 
+// Include represents the possible values for includes in calls to Disqus'API
+type Include string
+
 // Post constants are used by Disqus in API calls in the "include" parameter
 const (
-	PostIsUnapproved      = "unapproved"
-	PostIsApproved        = "approved"
-	PostIsSpam            = "spam"
-	PostIsDeleted         = "deleted"
-	PostIncludedIsFlagged = "flagged"
-	PostIsHighlighted     = "highlighted"
+	PostIsUnapproved      Include = "unapproved"
+	PostIsApproved        Include = "approved"
+	PostIsSpam            Include = "spam"
+	PostIsDeleted         Include = "deleted"
+	PostIncludedIsFlagged Include = "flagged"
+	PostIsHighlighted     Include = "highlighted"
 )
+
+// Interval represents the possible values for intervals in calls to Disqus'API
+type Interval string
 
 // Intervals are used by Disqus in API calls in the "since" parameter
 const (
-	Interval1h  = "1h"
-	Interval6h  = "6h"
-	Interval12h = "12h"
-	Interval1d  = "1d"
-	Interval3d  = "3d"
-	Interval7d  = "7d"
-	Interval30d = "30d"
-	Interval90d = "90d"
+	Interval1h  Interval = "1h"
+	Interval6h  Interval = "6h"
+	Interval12h Interval = "12h"
+	Interval1d  Interval = "1d"
+	Interval3d  Interval = "3d"
+	Interval7d  Interval = "7d"
+	Interval30d Interval = "30d"
+	Interval90d Interval = "90d"
 )
+
+// Order represents the possible values for order in calls to Disqus'API
+type Order string
 
 // Order constant are values used by Disqus in API calls in the "order" parameter
 const (
-	OrderAsc  = "asc"
-	OrderDesc = "desc"
+	OrderAsc  Order = "asc"
+	OrderDesc Order = "desc"
 )
+
+// Sort represents the possible values for sort in calls to Disqus'API
+type Sort string
 
 // Sort constants are values used by Disqus in API calls in the sortType parameter
 const (
-	SortTypeDate     = "date"
-	SortTypePriority = "priority"
+	SortTypeDate     Sort = "date"
+	SortTypePriority Sort = "priority"
 )
